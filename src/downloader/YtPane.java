@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 public class YtPane{
+	
+	
 	JPanel panel = new JPanel();
 	public YtPane(){
         GridBagLayout gbl_panel = new GridBagLayout();

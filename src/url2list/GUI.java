@@ -85,7 +85,7 @@ public class GUI {
 		final JTextArea inputTxt = new JTextArea();
 		inputTxt.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane.setViewportView(inputTxt);
-		inputTxt.setText("input");
+		inputTxt.setText("Careless Whisper - Wham! featuring George Michael\nLike a Virgin - Madonna\nWake Me Up Before You Go-Go - Wham!\nI Want To Know What Love Is - Foreigner\nI Feel For You - Chaka Khan\nOut of Touch - Daryl Hall & John Oates\nEverybody Wants to Rule the World - Tears for Fears\nMoney for Nothing - Dire Straits\nCrazy for You - Madonna\nTake on Me - a-ha");
 		inputTxt.setMinimumSize(new Dimension(300, 0));
 
 		JScrollPane scrollPane_1 = new JScrollPane();

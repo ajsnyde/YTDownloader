@@ -77,6 +77,11 @@ public class Launcher {
 		frmYoutubemusic.getContentPane().add(btnDownloader, gbc_btnDownloader);
 		
 		JButton btnSplitByTimestamps = new JButton("Split by Timestamps");
+		btnSplitByTimestamps.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				splitter.GUI.main(null);
+			}
+		});
 		GridBagConstraints gbc_btnSplitByTimestamps = new GridBagConstraints();
 		gbc_btnSplitByTimestamps.gridx = 3;
 		gbc_btnSplitByTimestamps.gridy = 1;
