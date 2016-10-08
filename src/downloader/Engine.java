@@ -19,7 +19,17 @@ public class Engine {
 		System.out.println("Creating new thread!");
 		Thread thread = new Thread(execute, "test");
 		thread.start();
-		System.out.println("I triggered him, he should be moving.");
+		
+        synchronized(execute){
+            try{
+                System.out.println("Waiting for b to notify...");
+                execute.wait();
+            }catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            System.out.println("Notified!");
+        }
+
 		return execute.input;
 	}
 }

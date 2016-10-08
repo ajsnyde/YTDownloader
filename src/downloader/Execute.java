@@ -4,28 +4,35 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Execute implements Runnable{
+public class Execute extends Thread {
 	String arguments = "";
 	static String exeLocation = "resources/youtube-dl.exe";
 	Process p;
 	public BufferedReader input;
-	
-	Execute(String arguments){
+
+	Execute(String arguments) {
 		this.arguments = arguments;
 	}
 
 	@Override
 	public void run() {
-		System.out.println("Running Executable?");
+		System.out.println("Running Executable");
 		try {
-			p = Runtime.getRuntime().exec(exeLocation + " " + arguments);
-			InputStreamReader re = new InputStreamReader(p.getInputStream());
-			input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String line;
-			//while ((line = input.readLine()) != null)
-			//GUI.editorPane.setText(GUI.editorPane.getText() + "\n" + line);
+			
+			synchronized (this) {
+				p = Runtime.getRuntime().exec(exeLocation + " " + arguments);
+				InputStreamReader re = new InputStreamReader(p.getInputStream());
+				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				notify();
+			}
 
-		} catch (IOException e) {
+			//String line;
+			//while ((line = input.readLine()) != null)
+			//	GUI.editorPane.setText(GUI.editorPane.getText() + "\n" + line);
+			
+			
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

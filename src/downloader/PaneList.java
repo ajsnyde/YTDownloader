@@ -49,9 +49,9 @@ public class PaneList extends JPanel {
 							.getData(DataFlavor.stringFlavor)).split("\n");
 					
 					for(String url: urls){
-						addPane(url);
+						YtPane pane = addPane(url);
 						
-						Video vid = new Video(url);
+						Video vid = new Video(url, pane);
 						Thread thread = new Thread(vid, "test");
 						thread.start();
 
@@ -65,11 +65,13 @@ public class PaneList extends JPanel {
 
 		add(adder, BorderLayout.SOUTH);
 	}
-
-	public void addPane(String url) {
-		mainList.add(new YtPane(url).panel, gbc, 0);
+	
+	public YtPane addPane(String url) {
+		YtPane pane = new YtPane(url);
+		mainList.add(pane.panel, gbc, 0);
 		validate();
 		repaint();
+		return pane;
 	}
 
 	@Override
