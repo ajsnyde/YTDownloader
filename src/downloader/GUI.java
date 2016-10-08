@@ -8,24 +8,28 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
+import javax.swing.JEditorPane;
+import java.awt.ScrollPane;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.awt.Component;
 
 public class GUI {
 
 	private JFrame frmDownloader;
-	
+
+	public static JEditorPane editorPane;
+	private ScrollPane scrollPane;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frmDownloader.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				GUI window = new GUI();
+				window.frmDownloader.setVisible(true);
 			}
 		});
 	}
-	
+
 	public GUI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -38,15 +42,15 @@ public class GUI {
 	private void initialize() {
 		frmDownloader = new JFrame();
 		frmDownloader.setTitle("Downloader");
-		frmDownloader.setBounds(100, 100, 655, 413);
+		frmDownloader.setBounds(100, 100, 654, 415);
 		frmDownloader.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{30, 0, 30, 0};
-		gridBagLayout.rowHeights = new int[]{30, 0, 25, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 30, 0, 30, 0 };
+		gridBagLayout.rowHeights = new int[] { 30, 62, 98, 25, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		frmDownloader.getContentPane().setLayout(gridBagLayout);
-		
+
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
@@ -57,5 +61,16 @@ public class GUI {
 		panel.setLayout(new BorderLayout(0, 0));
 
 		panel.add(new PaneList());
+
+		editorPane = new JEditorPane();
+		scrollPane = new ScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane.gridx = 1;
+		gbc_scrollPane.gridy = 2;
+
+		scrollPane.add(editorPane);
+		frmDownloader.getContentPane().add(scrollPane, gbc_scrollPane);
 	}
 }
