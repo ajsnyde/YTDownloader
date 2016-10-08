@@ -48,7 +48,7 @@ public class GUI {
 		gridBagLayout.columnWidths = new int[] { 30, 0, 30, 0 };
 		gridBagLayout.rowHeights = new int[] { 30, 62, 98, 25, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
 		frmDownloader.getContentPane().setLayout(gridBagLayout);
 
 		JPanel panel = new JPanel();

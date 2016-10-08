@@ -29,9 +29,7 @@ public class Execute extends Thread {
 			//String line;
 			//while ((line = input.readLine()) != null)
 			//	GUI.editorPane.setText(GUI.editorPane.getText() + "\n" + line);
-			
-			
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

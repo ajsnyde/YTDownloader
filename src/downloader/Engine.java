@@ -14,22 +14,18 @@ public class Engine {
 		return exe("https://www.youtube.com/watch?v=4R-JGw3VTuY");
 	}
 	
+	// create a new thread that launches and monitors (or more accurately, returns the buffer of) the yt-downloader.exe
 	public static BufferedReader exe(String command){
 		Execute execute = new Execute(command);
-		System.out.println("Creating new thread!");
 		Thread thread = new Thread(execute, "test");
 		thread.start();
-		
         synchronized(execute){
             try{
-                System.out.println("Waiting for b to notify...");
                 execute.wait();
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
-            System.out.println("Notified!");
         }
-
 		return execute.input;
 	}
 }

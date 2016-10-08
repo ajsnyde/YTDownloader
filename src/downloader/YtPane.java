@@ -15,7 +15,9 @@ public class YtPane{
 	
 	JLabel lblProgress = new JLabel("progress");
 	JPanel panel = new JPanel();
-	
+	ImageIcon icon = new ImageIcon("resources/american-alligator.jpg");
+	JLabel lblThumbnail = new JLabel("Thumbnail");
+
 	public YtPane(String url){
         GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[]{165, 119, 0, 0, 0};
@@ -25,13 +27,12 @@ public class YtPane{
         panel.setLayout(gbl_panel);
         panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
         
-        JLabel lblThumbnail = new JLabel("Thumbnail");
+        
         GridBagConstraints gbc_lblThumbnail = new GridBagConstraints();
         gbc_lblThumbnail.insets = new Insets(0, 0, 0, 5);
         gbc_lblThumbnail.gridx = 0;
         gbc_lblThumbnail.gridy = 0;
         try{
-        ImageIcon icon = new ImageIcon("resources/american-alligator.jpg");
 		Image icon2 = icon.getImage().getScaledInstance(168, 94, Image.SCALE_DEFAULT);
 		lblThumbnail.setIcon(new ImageIcon(icon2));
         } catch(Exception e){
