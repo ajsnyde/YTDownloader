@@ -23,7 +23,7 @@ public class Video implements Runnable {
 
 	@Override
 	public void run() {
-		BufferedReader input = Engine.exe(url + "--skip-download --write-thumbnail");
+		BufferedReader input = Engine.exe(url + " -o %(title)s.%(ext)s --write-thumbnail -x --audio-format mp3");
 
 		try {
 			String line;
@@ -48,7 +48,7 @@ public class Video implements Runnable {
 			Image icon2 = icon.getImage().getScaledInstance(168, 94, Image.SCALE_DEFAULT);
 			pane.lblThumbnail.setIcon(new ImageIcon(icon2));
 
-			pane.lblThumbnail.setText(file);
+			//pane.lblThumbnail.setText(file);
 			
 		}
 	}
