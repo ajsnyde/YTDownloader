@@ -3,7 +3,10 @@ package downloader;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
+import javax.swing.text.DefaultCaret;
+
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -18,8 +21,8 @@ public class GUI {
 
 	private JFrame frmDownloader;
 
-	public static JEditorPane editorPane;
-	private ScrollPane scrollPane;
+	public static JTextPane textPane;
+	private static ScrollPane scrollPane;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -62,15 +65,21 @@ public class GUI {
 
 		panel.add(new PaneList());
 
-		editorPane = new JEditorPane();
+		textPane = new JTextPane();
 		scrollPane = new ScrollPane();
+		
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.insets = new Insets(0, 0, 0, 5);
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 2;
 
-		scrollPane.add(editorPane);
+		scrollPane.add(textPane);
 		frmDownloader.getContentPane().add(scrollPane, gbc_scrollPane);
+	}
+	
+	public static void addText(String line){
+		textPane.setText(textPane.getText() + "\n" + line);
+		scrollPane.setScrollPosition(0, Integer.MAX_VALUE);
 	}
 }

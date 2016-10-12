@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JProgressBar;
 
 public class YtPane{
 	
@@ -17,6 +18,7 @@ public class YtPane{
 	JPanel panel = new JPanel();
 	ImageIcon icon = new ImageIcon("resources/american-alligator.jpg");
 	JLabel lblThumbnail = new JLabel("");
+	final JProgressBar progressBar = new JProgressBar();
 
 	public YtPane(String url){
         GridBagLayout gbl_panel = new GridBagLayout();
@@ -55,6 +57,14 @@ public class YtPane{
         gbc_lblProgress.gridx = 1;
         gbc_lblProgress.gridy = 2;
         panel.add(lblProgress, gbc_lblProgress);
+        
+        GridBagConstraints gbc_progressBar = new GridBagConstraints();
+        gbc_progressBar.anchor = GridBagConstraints.EAST;
+        gbc_progressBar.gridwidth = 2;
+        gbc_progressBar.insets = new Insets(0, 0, 5, 5);
+        gbc_progressBar.gridx = 2;
+        gbc_progressBar.gridy = 2;
+        panel.add(progressBar, gbc_progressBar);
         
         JLabel lblUrl = new JLabel(url);
         GridBagConstraints gbc_lblUrl = new GridBagConstraints();

@@ -2,8 +2,9 @@ package downloader;
 
 import java.awt.Image;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 
@@ -15,6 +16,8 @@ public class Video implements Runnable {
 	public String description;
 	public YtPane pane;
 	ImageIcon icon = new ImageIcon("resources/american-alligator.jpg");
+	
+	final Pattern percentage = Pattern.compile("(\\d+(\\.)?\\d+)%");
 
 	Video(String url, YtPane pane) {
 		this.url = url;
@@ -29,7 +32,7 @@ public class Video implements Runnable {
 			String line;
 			while ((line = input.readLine()) != null) {
 				parseLine(line);
-				GUI.editorPane.setText(GUI.editorPane.getText() + "\n" + line);
+				GUI.addText(line);
 				// pane.lblProgress.setText(line);
 
 			}
@@ -47,9 +50,17 @@ public class Video implements Runnable {
 			ImageIcon icon = new ImageIcon(file);
 			Image icon2 = icon.getImage().getScaledInstance(168, 94, Image.SCALE_DEFAULT);
 			pane.lblThumbnail.setIcon(new ImageIcon(icon2));
-
-			//pane.lblThumbnail.setText(file);
-			
+			//pane.lblThumbnail.setText(file);		
+		} else if(line.contains("[download]")) {
+			try{
+				Matcher m = percentage.matcher(line);
+				if(m.find()) {
+					pane.progressBar.setValue((int)Double.parseDouble(m.group(1)));
+					pane.lblProgress.setText(m.group(1));
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 }
