@@ -81,7 +81,7 @@ public class GUI {
 		JButton btnShowMeThe = new JButton("Show me the split file names!");
 		btnShowMeThe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			textPane.setText(new Splitter().split(textField.getText()));
+			textPane.setText(new Splitter().getDescription(textField.getText()));
 			}
 		});
 		GridBagConstraints gbc_btnShowMeThe = new GridBagConstraints();

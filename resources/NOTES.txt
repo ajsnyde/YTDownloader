@@ -1,0 +1,2 @@
+Can split mp3 using the below formatted command:
+sox test.mp3 -c 2 -C 320 test2.mp3 trim 10
