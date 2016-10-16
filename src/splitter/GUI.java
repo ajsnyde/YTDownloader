@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import downloader.Engine;
+import youtube_dl.Engine;
 
 import java.awt.GridBagLayout;
 import javax.swing.JTextField;

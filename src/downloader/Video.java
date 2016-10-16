@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 
+import youtube_dl.Engine;
+
 // run method grabs video metadata
 public class Video implements Runnable {
 
