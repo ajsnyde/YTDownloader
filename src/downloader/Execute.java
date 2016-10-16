@@ -6,10 +6,9 @@ import java.io.InputStreamReader;
 
 public class Execute extends Thread {
 	String arguments = "";
-	static String exeLocation = "resources/youtube-dl.exe";
-	Process p;
 	public BufferedReader input;
-
+	Process p;
+	
 	Execute(String arguments) {
 		this.arguments = arguments;
 	}
@@ -20,18 +19,13 @@ public class Execute extends Thread {
 		try {
 			
 			synchronized (this) {
-				p = Runtime.getRuntime().exec(exeLocation + " " + arguments);
+				p = Runtime.getRuntime().exec(Engine.exeLocation + " " + arguments);
 				InputStreamReader re = new InputStreamReader(p.getInputStream());
 				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				notify();
 			}
 
-			//String line;
-			//while ((line = input.readLine()) != null)
-			//	GUI.editorPane.setText(GUI.editorPane.getText() + "\n" + line);
-
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
