@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 public class Fetcher implements Runnable { // REGEX FOR FIRST VIDEO: /<a aria-hidden="true" href="/watch/
 
 	String input = "";
-
+	final static String DEFAULT_REGEX = "(?:item-section\\\")(?is).+?(href=\"/watch[^\\\"]+)";
+	static String regex = "(?:item-section\\\")(?is).+?(href=\"/watch[^\\\"]+)";
+	
 	Fetcher(String in) {
 		OpManager.CUR_THREADS.incrementAndGet();
 		input = in;
@@ -50,7 +52,7 @@ public class Fetcher implements Runnable { // REGEX FOR FIRST VIDEO: /<a aria-hi
 
 	String fetchURL(String html) {
 		long start = System.nanoTime();
-		Pattern pattern = Pattern.compile("(?:item-section\\\")(?is).+?(href=\"/watch[^\\\"]+)");
+		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(html);
 
 		if (matcher.find()) {

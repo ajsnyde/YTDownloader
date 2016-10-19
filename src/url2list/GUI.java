@@ -30,7 +30,6 @@ public class GUI {
 	public static List<String> output = Collections.synchronizedList(new ArrayList<String>());
 	public final static JTextArea outputTxt = new JTextArea();
 	private JFrame frmBatchUrlRetriever;
-	Singleton stats = new Singleton();
 	OpManager mgr = new OpManager();
 	
 	public static void main(String[] args) {
@@ -106,23 +105,6 @@ public class GUI {
 			}
 		});
 		menuBar.add(mntmSettings);
-
-		JMenuItem mntmStats = new JMenuItem("Stats");
-		mntmStats.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				stats.getStats();
-				//StatsGUI stats = new StatsGUI();
-			}
-		});
-		menuBar.add(mntmStats);
-
-		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				About about = new About();
-			}
-		});
-		menuBar.add(mntmAbout);
 		
 		JLabel lblThreads = new JLabel("Threads:");
 		menuBar.add(lblThreads);

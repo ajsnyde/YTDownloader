@@ -75,5 +75,4 @@ public class Splitter {
 		} else
 			return 0;
 	}
-
 }
