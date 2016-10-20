@@ -1,2 +1,5 @@
 /bin/downloader/*.class
 *.class
+bin
+*.mp3
+/Downloads/meta/*.json
