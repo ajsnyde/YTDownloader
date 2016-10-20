@@ -16,6 +16,12 @@ import javax.swing.JButton;
 import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.JMenuItem;
 
 public class GUI {
 
@@ -46,40 +52,33 @@ public class GUI {
 
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 544, 330);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.columnWidths = new int[] { 0, 45, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		frame.getContentPane().setLayout(gridBagLayout);
 
 		JLabel lblUrl = new JLabel("URL:");
 		GridBagConstraints gbc_lblUrl = new GridBagConstraints();
 		gbc_lblUrl.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUrl.anchor = GridBagConstraints.EAST;
-		gbc_lblUrl.gridx = 0;
+		gbc_lblUrl.gridx = 1;
 		gbc_lblUrl.gridy = 1;
 		frame.getContentPane().add(lblUrl, gbc_lblUrl);
 
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
+		gbc_textField.gridx = 2;
 		gbc_textField.gridy = 1;
 		frame.getContentPane().add(textField, gbc_textField);
 		textField.setColumns(10);
 
-		JTextPane textPane = new JTextPane();
-		GridBagConstraints gbc_textPane = new GridBagConstraints();
-		gbc_textPane.fill = GridBagConstraints.BOTH;
-		gbc_textPane.gridx = 1;
-		gbc_textPane.gridy = 3;
-		frame.getContentPane().add(textPane, gbc_textPane);
-
-		JButton btnShowMeThe = new JButton("Show me the split file names!");
+		JButton btnShowMeThe = new JButton("Download + Convert to MP3 + Split by Description");
 		btnShowMeThe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				Splitter splitter = new Splitter();
@@ -88,10 +87,21 @@ public class GUI {
 			}
 		});
 		GridBagConstraints gbc_btnShowMeThe = new GridBagConstraints();
-		gbc_btnShowMeThe.insets = new Insets(0, 0, 5, 0);
-		gbc_btnShowMeThe.gridx = 1;
+		gbc_btnShowMeThe.insets = new Insets(0, 0, 5, 5);
+		gbc_btnShowMeThe.gridx = 2;
 		gbc_btnShowMeThe.gridy = 2;
 		frame.getContentPane().add(btnShowMeThe, gbc_btnShowMeThe);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenuItem mntmOptions = new JMenuItem("Settings..");
+		mntmOptions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Settings();
+			}
+		});
+		menuBar.add(mntmOptions);
 	}
 
 }

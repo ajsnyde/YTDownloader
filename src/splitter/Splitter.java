@@ -7,19 +7,25 @@ import youtube_dl.Engine;
 
 public class Splitter {
 
+	static final String EXE_LOCATION_DEFAULT = "resources/sox-14-4-2/sox.exe";
+	static String exeLocation = "resources/sox-14-4-2/sox.exe";
+	
+	static String regex = "([\\d]*\\.?)[ \\t]*(.+?)[ \\t]*([\\d]{0,2}:?[\\d]{1,3}:\\d\\d).*\\n";
+	static final String DEFAULT_REGEX ="([\\d]*\\.?)[ \\t]*(.+?)[ \\t]*([\\d]{0,2}:?[\\d]{1,3}:\\d\\d).*\\n";
+	
+	static boolean keepVideo = false;
+	
 	String description = "";
 	String albumTitle = "";
 	int duration = 0;
-	static String exeLocation = "resources/sox-14-4-2/sox.exe";
-	Pattern pattern = Pattern.compile("([\\d]*\\.?)[ \\t]*(.+?)[ \\t]*([\\d]{0,2}:?[\\d]{1,3}:\\d\\d).*\\n");
-
+	
 	public void splitByDescription(String url) {
 		download(url);
 		parseAndSplit(url);
 	}
 
 	void download(String url) {
-		Engine.exeWait(url, "-oDownloads/%(title)s/%(title)s.%(ext)s", "-x", "--audio-format", "mp3");
+		Engine.exeWait(url, "-oDownloads/%(title)s/%(title)s.%(ext)s", "-x", "--audio-format", "mp3", keepVideo ? "-k" : "");
 		System.out.println("Done downloading mp3");
 		description = Engine.getMetaElement(url, "description");
 		duration = Integer.parseInt(Engine.getMetaElement(url, "duration"));
@@ -27,6 +33,7 @@ public class Splitter {
 	}
 
 	void parseAndSplit(String url) {
+		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(description);
 		String title = "TEST";
 		String time = "00:00";
