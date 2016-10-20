@@ -4,10 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import java.awt.GridBagLayout;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -47,19 +44,19 @@ public class Launcher {
 		frmYoutubemusic.setBounds(100, 100, 415, 266);
 		frmYoutubemusic.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{32, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{31, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 32, 0, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 31, 0, 0, 0, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		frmYoutubemusic.getContentPane().setLayout(gridBagLayout);
-		
+
 		JButton btnListurls = new JButton("List2URLs");
 		btnListurls.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				url2list.GUI.main(null);
 			}
 		});
-		
+
 		JLabel lblNewLabel = new JLabel("Utilities:");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.gridwidth = 3;
@@ -73,7 +70,7 @@ public class Launcher {
 		gbc_btnListurls.gridx = 1;
 		gbc_btnListurls.gridy = 1;
 		frmYoutubemusic.getContentPane().add(btnListurls, gbc_btnListurls);
-		
+
 		JButton btnDownloader = new JButton("Downloader");
 		btnDownloader.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -86,7 +83,7 @@ public class Launcher {
 		gbc_btnDownloader.gridx = 2;
 		gbc_btnDownloader.gridy = 1;
 		frmYoutubemusic.getContentPane().add(btnDownloader, gbc_btnDownloader);
-		
+
 		JButton btnSplitByTimestamps = new JButton("Split by Timestamps");
 		btnSplitByTimestamps.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,7 +96,7 @@ public class Launcher {
 		gbc_btnSplitByTimestamps.gridx = 3;
 		gbc_btnSplitByTimestamps.gridy = 1;
 		frmYoutubemusic.getContentPane().add(btnSplitByTimestamps, gbc_btnSplitByTimestamps);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("What do you want to do?");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.gridwidth = 3;
@@ -107,7 +104,7 @@ public class Launcher {
 		gbc_lblNewLabel_1.gridx = 1;
 		gbc_lblNewLabel_1.gridy = 3;
 		frmYoutubemusic.getContentPane().add(lblNewLabel_1, gbc_lblNewLabel_1);
-		
+
 		JButton btnNewButton = new JButton("Convert a youtube video to a music album!");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.gridwidth = 3;

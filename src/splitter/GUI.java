@@ -5,22 +5,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import youtube_dl.Engine;
-
 import java.awt.GridBagLayout;
 import javax.swing.JTextField;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import java.awt.Insets;
 import javax.swing.JButton;
-import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.JMenuItem;
 
 public class GUI {
@@ -80,10 +73,11 @@ public class GUI {
 
 		JButton btnShowMeThe = new JButton("Download + Convert to MP3 + Split by Description");
 		btnShowMeThe.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {	
+			public void actionPerformed(ActionEvent arg0) {
 				Splitter splitter = new Splitter();
 				splitter.splitByDescription(textField.getText());
-				//textPane.setText(new Engine().getMetaElement(textField.getText(), "description"));
+				// textPane.setText(new
+				// Engine().getMetaElement(textField.getText(), "description"));
 			}
 		});
 		GridBagConstraints gbc_btnShowMeThe = new GridBagConstraints();
@@ -91,10 +85,10 @@ public class GUI {
 		gbc_btnShowMeThe.gridx = 2;
 		gbc_btnShowMeThe.gridy = 2;
 		frame.getContentPane().add(btnShowMeThe, gbc_btnShowMeThe);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
-		
+
 		JMenuItem mntmOptions = new JMenuItem("Settings..");
 		mntmOptions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

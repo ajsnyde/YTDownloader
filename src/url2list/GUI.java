@@ -1,4 +1,5 @@
 package url2list;
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -7,7 +8,6 @@ import java.awt.Dimension;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,8 +22,6 @@ import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeListener;
 
-import launcher.Launcher;
-
 import javax.swing.event.ChangeEvent;
 
 public class GUI {
@@ -31,7 +29,7 @@ public class GUI {
 	public final static JTextArea outputTxt = new JTextArea();
 	private JFrame frmBatchUrlRetriever;
 	OpManager mgr = new OpManager();
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -44,7 +42,6 @@ public class GUI {
 			}
 		});
 	}
-
 
 	public GUI() {
 		try {
@@ -84,7 +81,8 @@ public class GUI {
 		final JTextArea inputTxt = new JTextArea();
 		inputTxt.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		scrollPane.setViewportView(inputTxt);
-		inputTxt.setText("Careless Whisper - Wham! featuring George Michael\nLike a Virgin - Madonna\nWake Me Up Before You Go-Go - Wham!\nI Want To Know What Love Is - Foreigner\nI Feel For You - Chaka Khan\nOut of Touch - Daryl Hall & John Oates\nEverybody Wants to Rule the World - Tears for Fears\nMoney for Nothing - Dire Straits\nCrazy for You - Madonna\nTake on Me - a-ha");
+		inputTxt.setText(
+				"Careless Whisper - Wham! featuring George Michael\nLike a Virgin - Madonna\nWake Me Up Before You Go-Go - Wham!\nI Want To Know What Love Is - Foreigner\nI Feel For You - Chaka Khan\nOut of Touch - Daryl Hall & John Oates\nEverybody Wants to Rule the World - Tears for Fears\nMoney for Nothing - Dire Straits\nCrazy for You - Madonna\nTake on Me - a-ha");
 		inputTxt.setMinimumSize(new Dimension(300, 0));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -105,21 +103,21 @@ public class GUI {
 			}
 		});
 		menuBar.add(mntmSettings);
-		
+
 		JLabel lblThreads = new JLabel("Threads:");
 		menuBar.add(lblThreads);
-		
+
 		final JSpinner spinner = new JSpinner();
 		spinner.setValue(1);
 		spinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				mgr.MAX_THREADS.set((int)spinner.getValue());
+				mgr.MAX_THREADS.set((int) spinner.getValue());
 			}
 		});
 		spinner.setPreferredSize(new Dimension(0, 20));
 		menuBar.add(spinner);
 		spinner.setValue(OpManager.MAX_THREADS.get());
-		
+
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -139,9 +137,10 @@ public class GUI {
 			}
 		});
 	}
-	public static void refresh(){
+
+	public static void refresh() {
 		String outputStr = "";
-		for(String s: output)
+		for (String s : output)
 			outputStr += s + "\n";
 		outputTxt.setText(outputStr);
 	}

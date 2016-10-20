@@ -1,4 +1,5 @@
 package splitter;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -20,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Rectangle;
 
 import javax.swing.JTextPane;
 import javax.swing.JSpinner;
@@ -36,18 +36,18 @@ public class Settings extends JDialog {
 	private JTextField txtMemory;
 	private JSpinner spinnerTitle;
 	private JSpinner spinnerTimestamp;
-	
+
 	public Settings() {
 		setTitle("Settings");
-		setBounds(100, 100, 521, 403); 
+		setBounds(100, 100, 521, 403);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{10, 140, 10, 0};
-		gbl_contentPanel.rowHeights = new int[]{10, 73, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.columnWidths = new int[] { 10, 140, 10, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 10, 73, 0 };
+		gbl_contentPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JPanel panel = new JPanel();
@@ -60,10 +60,10 @@ public class Settings extends JDialog {
 			gbc_panel.gridy = 1;
 			contentPanel.add(panel, gbc_panel);
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{93, 286, 0};
-			gbl_panel.rowHeights = new int[]{20, 0, 70, 0, 0, 20, 0, 0};
-			gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel.columnWidths = new int[] { 93, 286, 0 };
+			gbl_panel.rowHeights = new int[] { 20, 0, 70, 0, 0, 20, 0, 0 };
+			gbl_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
 			panel.setLayout(gbl_panel);
 			{
 				JLabel lblNewLabel = new JLabel("Regex:");
@@ -111,7 +111,8 @@ public class Settings extends JDialog {
 				}
 				{
 					spinnerTimestamp = new JSpinner();
-					spinnerTimestamp.setModel(new SpinnerNumberModel(new Integer(2), new Integer(0), null, new Integer(1)));
+					spinnerTimestamp
+							.setModel(new SpinnerNumberModel(new Integer(2), new Integer(0), null, new Integer(1)));
 					panel_1.add(spinnerTimestamp);
 				}
 			}
@@ -126,7 +127,8 @@ public class Settings extends JDialog {
 				panel.add(scrollPane, gbc_scrollPane);
 				{
 					JTextPane txtpnHelp = new JTextPane();
-					txtpnHelp.setText("The regex above is assisted - that is, certain keywords will yield their regex counterparts, allowing those not familiar with regex to still have a good chance of parsing descriptions. The following tags will be processed accordingly:\r\ntimestamp - a timestamp in standard Youtube format ([\\\\d]{0,2}:?[\\\\d]{1,3}:\\\\d\\\\d)\r\ntitle - a string which is trimmed of outer whitespace\r\nnum - a group of digits (\\d+)\r\n[ ] (space) - any space (\\s+)\r\n\r\nCertain characters (ex. parentheses, brackets, periods) will need to be 'escaped', or preceded by a backslash. For example, '\\(' equates to a literal '('.\r\n\r\nAdditionally, group numbers must also be addressed - the only information that needs to be explicitly grouped is that of the title and the timestamp. When entering custom regex, one must tell the program which groups contain which info. For most non-advanced regex, this is simply the order of the timestamp and title tag - i.e. \"\\[timestamp\\] num\\. title\" would mean that timestamp group number would be 1 and title would be 2 (num is not captured in a group, as it is useless information).");
+					txtpnHelp.setText(
+							"The regex above is assisted - that is, certain keywords will yield their regex counterparts, allowing those not familiar with regex to still have a good chance of parsing descriptions. The following tags will be processed accordingly:\r\ntimestamp - a timestamp in standard Youtube format ([\\\\d]{0,2}:?[\\\\d]{1,3}:\\\\d\\\\d)\r\ntitle - a string which is trimmed of outer whitespace\r\nnum - a group of digits (\\d+)\r\n[ ] (space) - any space (\\s+)\r\n\r\nCertain characters (ex. parentheses, brackets, periods) will need to be 'escaped', or preceded by a backslash. For example, '\\(' equates to a literal '('.\r\n\r\nAdditionally, group numbers must also be addressed - the only information that needs to be explicitly grouped is that of the title and the timestamp. When entering custom regex, one must tell the program which groups contain which info. For most non-advanced regex, this is simply the order of the timestamp and title tag - i.e. \"\\[timestamp\\] num\\. title\" would mean that timestamp group number would be 1 and title would be 2 (num is not captured in a group, as it is useless information).");
 					scrollPane.setViewportView(txtpnHelp);
 					txtpnHelp.setCaretPosition(0);
 				}
@@ -135,19 +137,18 @@ public class Settings extends JDialog {
 				JButton btnTestRegex = new JButton("Test Regex:");
 				btnTestRegex.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						
+
 						txtMemory.getText();
 						Pattern pattern = Pattern.compile(RegexHelper.regexProcess(regexTextBar.getText()));
 						Matcher matcher = pattern.matcher(txtMemory.getText());
 						String output = "";
-						while (matcher.find()){
-							output += "title: " + matcher.group((int)spinnerTitle.getValue()) + "\n";
-							output += "timestamp: " + matcher.group((int)spinnerTimestamp.getValue()) + "\n";
+						while (matcher.find()) {
+							output += "title: " + matcher.group((int) spinnerTitle.getValue()) + "\n";
+							output += "timestamp: " + matcher.group((int) spinnerTimestamp.getValue()) + "\n";
 						}
-						
-						JOptionPane.showMessageDialog(new Frame(),
-							    output);
-						
+
+						JOptionPane.showMessageDialog(new Frame(), output);
+
 					}
 				});
 				GridBagConstraints gbc_btnTestRegex = new GridBagConstraints();
@@ -229,8 +230,8 @@ public class Settings extends JDialog {
 				btnApply.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						Splitter.regex = RegexHelper.regexProcess(regexTextBar.getText());
-						Splitter.titleGroup = (int)spinnerTitle.getValue();
-						Splitter.timestampGroup = (int)spinnerTimestamp.getValue();
+						Splitter.titleGroup = (int) spinnerTitle.getValue();
+						Splitter.timestampGroup = (int) spinnerTimestamp.getValue();
 						Splitter.exeLocation = textField.getText();
 						Splitter.keepVideo = keepVid.isSelected();
 					}

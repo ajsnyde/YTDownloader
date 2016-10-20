@@ -1,16 +1,17 @@
 package url2list;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Fetcher implements Runnable { // REGEX FOR FIRST VIDEO: /<a aria-hidden="true" href="/watch/
+public class Fetcher implements Runnable {
 
 	String input = "";
 	final static String DEFAULT_REGEX = "(?:item-section\\\")(?is).+?(href=\"/watch[^\\\"]+)";
 	static String regex = "(?:item-section\\\")(?is).+?(href=\"/watch[^\\\"]+)";
-	
+
 	Fetcher(String in) {
 		OpManager.CUR_THREADS.incrementAndGet();
 		input = in;
@@ -18,15 +19,13 @@ public class Fetcher implements Runnable { // REGEX FOR FIRST VIDEO: /<a aria-hi
 
 	@Override
 	public void run() {
-		//System.out.println("New Thread!");
 		fetch(input);
 	}
 
 	void fetch(String line) {
-		
+
 		String html = fetchHTML(line);
 		String URL = fetchURL(html);
-		//System.out.println(URL);
 		GUI.output.add(URL);
 	}
 
@@ -38,7 +37,6 @@ public class Fetcher implements Runnable { // REGEX FOR FIRST VIDEO: /<a aria-hi
 		String content = null;
 		URLConnection connection = null;
 		try {
-			//System.out.println("https://www.youtube.com/results?search_query=" + lookup);
 			connection = new URL("https://www.youtube.com/results?search_query=" + lookup).openConnection();
 			Scanner scanner = new Scanner(connection.getInputStream());
 			scanner.useDelimiter("\\Z");

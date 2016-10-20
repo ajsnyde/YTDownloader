@@ -1,7 +1,6 @@
 package downloader;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,15 +13,11 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.MatteBorder;
-import java.awt.event.KeyAdapter;
 
 public class PaneList extends JPanel {
 
@@ -30,7 +25,7 @@ public class PaneList extends JPanel {
 	private static GridBagConstraints gbc = new GridBagConstraints();
 
 	public PaneList() {
-		
+
 		setLayout(new BorderLayout());
 
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -72,21 +67,21 @@ public class PaneList extends JPanel {
 		});
 
 		add(adder, BorderLayout.SOUTH);
-		
-		
-		KeyboardFocusManager ky=KeyboardFocusManager.getCurrentKeyboardFocusManager();
 
-	    ky.addKeyEventDispatcher(new KeyEventDispatcher() {
+		KeyboardFocusManager ky = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 
-	        @Override
-	        public boolean dispatchKeyEvent(KeyEvent e) {
-	             if (e.getID()==KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-	                adder.doClick();
-	            }
-	             return  true;
-	        }
-	    });
-		
+		ky.addKeyEventDispatcher(new KeyEventDispatcher() {
+
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (e.getID() == KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V)
+						&& ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+					adder.doClick();
+				}
+				return true;
+			}
+		});
+
 	}
 
 	public YtPane addPane(String url) {

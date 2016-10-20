@@ -5,17 +5,11 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
-import javax.swing.text.DefaultCaret;
-
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.BorderLayout;
-import javax.swing.JEditorPane;
 import java.awt.ScrollPane;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.awt.Component;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
@@ -71,7 +65,7 @@ public class GUI {
 
 		textPane = new JTextPane();
 		scrollPane = new ScrollPane();
-		
+
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.insets = new Insets(0, 0, 0, 5);
@@ -80,15 +74,15 @@ public class GUI {
 
 		scrollPane.add(textPane);
 		frmDownloader.getContentPane().add(scrollPane, gbc_scrollPane);
-		
+
 		menuBar = new JMenuBar();
 		frmDownloader.setJMenuBar(menuBar);
-		
+
 		mntmSettings = new JMenuItem("Settings..");
 		menuBar.add(mntmSettings);
 	}
-	
-	public static void addText(String line){
+
+	public static void addText(String line) {
 		textPane.setText(textPane.getText() + "\n" + line);
 		scrollPane.setScrollPosition(0, Integer.MAX_VALUE);
 	}

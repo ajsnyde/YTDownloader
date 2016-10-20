@@ -1,9 +1,9 @@
 package splitter;
 
 public class RegexHelper {
-	static String regexProcess(String pre){
+	static String regexProcess(String pre) {
 		System.out.println("Converting " + pre);
-		
+
 		pre = pre.replace("num", "[\\d]+");
 		pre = pre.replace(" ", "\\s+");
 		pre = pre.replace("title", "(.+)");
