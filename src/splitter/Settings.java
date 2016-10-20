@@ -1,39 +1,51 @@
 package splitter;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Frame;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Component;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
+import java.awt.Rectangle;
+
+import javax.swing.JTextPane;
+import javax.swing.JSpinner;
+import javax.swing.JScrollPane;
+import javax.swing.SpinnerNumberModel;
 
 public class Settings extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtRawJavaRegex;
+	private JTextField regexTextBar;
 	private JTextField textField;
-	private JCheckBox chckbxYes;
-
+	private JCheckBox keepVid;
+	private JTextField txtMemory;
+	private JSpinner spinnerTitle;
+	private JSpinner spinnerTimestamp;
+	
 	public Settings() {
 		setTitle("Settings");
-		setBounds(100, 100, 450, 300); 
+		setBounds(100, 100, 521, 403); 
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{20, 140, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 73, 0};
+		gbl_contentPanel.columnWidths = new int[]{10, 140, 10, 0};
+		gbl_contentPanel.rowHeights = new int[]{10, 73, 0};
 		gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_contentPanel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		contentPanel.setLayout(gbl_contentPanel);
@@ -48,10 +60,10 @@ public class Settings extends JDialog {
 			gbc_panel.gridy = 1;
 			contentPanel.add(panel, gbc_panel);
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{35, 286, 0};
-			gbl_panel.rowHeights = new int[]{20, 20, 0, 0};
-			gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel.columnWidths = new int[]{93, 286, 0};
+			gbl_panel.rowHeights = new int[]{20, 0, 70, 0, 0, 20, 0, 0};
+			gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+			gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 			panel.setLayout(gbl_panel);
 			{
 				JLabel lblNewLabel = new JLabel("Regex:");
@@ -62,17 +74,99 @@ public class Settings extends JDialog {
 				gbc_lblNewLabel.gridy = 0;
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
-			txtRawJavaRegex = new JTextField();
-			txtRawJavaRegex.setDragEnabled(true);
+			regexTextBar = new JTextField();
+			regexTextBar.setDragEnabled(true);
 			{
-				txtRawJavaRegex.setText(Splitter.regex);
+				regexTextBar.setText(Splitter.regex);
 				GridBagConstraints gbc_txtRawJavaRegex = new GridBagConstraints();
-				gbc_txtRawJavaRegex.anchor = GridBagConstraints.NORTHWEST;
+				gbc_txtRawJavaRegex.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtRawJavaRegex.anchor = GridBagConstraints.NORTH;
 				gbc_txtRawJavaRegex.insets = new Insets(0, 0, 5, 0);
 				gbc_txtRawJavaRegex.gridx = 1;
 				gbc_txtRawJavaRegex.gridy = 0;
-				panel.add(txtRawJavaRegex, gbc_txtRawJavaRegex);
-				txtRawJavaRegex.setColumns(35);
+				panel.add(regexTextBar, gbc_txtRawJavaRegex);
+				regexTextBar.setColumns(35);
+			}
+			{
+				JPanel panel_1 = new JPanel();
+				GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+				gbc_panel_1.gridwidth = 2;
+				gbc_panel_1.insets = new Insets(0, 0, 5, 0);
+				gbc_panel_1.fill = GridBagConstraints.BOTH;
+				gbc_panel_1.gridx = 0;
+				gbc_panel_1.gridy = 1;
+				panel.add(panel_1, gbc_panel_1);
+				{
+					JLabel lblTitleGroup = new JLabel("title group #:");
+					panel_1.add(lblTitleGroup);
+				}
+				{
+					spinnerTitle = new JSpinner();
+					spinnerTitle.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
+					panel_1.add(spinnerTitle);
+				}
+				{
+					JLabel lblTimestampGroup = new JLabel("timestamp group #:");
+					panel_1.add(lblTimestampGroup);
+				}
+				{
+					spinnerTimestamp = new JSpinner();
+					spinnerTimestamp.setModel(new SpinnerNumberModel(new Integer(2), new Integer(0), null, new Integer(1)));
+					panel_1.add(spinnerTimestamp);
+				}
+			}
+			{
+				JScrollPane scrollPane = new JScrollPane();
+				GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+				gbc_scrollPane.gridwidth = 2;
+				gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+				gbc_scrollPane.fill = GridBagConstraints.BOTH;
+				gbc_scrollPane.gridx = 0;
+				gbc_scrollPane.gridy = 2;
+				panel.add(scrollPane, gbc_scrollPane);
+				{
+					JTextPane txtpnHelp = new JTextPane();
+					txtpnHelp.setText("The regex above is assisted - that is, certain keywords will yield their regex counterparts, allowing those not familiar with regex to still have a good chance of parsing descriptions. The following tags will be processed accordingly:\r\ntimestamp - a timestamp in standard Youtube format ([\\\\d]{0,2}:?[\\\\d]{1,3}:\\\\d\\\\d)\r\ntitle - a string which is trimmed of outer whitespace\r\nnum - a group of digits (\\d+)\r\n[ ] (space) - any space (\\s+)\r\n\r\nCertain characters (ex. parentheses, brackets, periods) will need to be 'escaped', or preceded by a backslash. For example, '\\(' equates to a literal '('.\r\n\r\nAdditionally, group numbers must also be addressed - the only information that needs to be explicitly grouped is that of the title and the timestamp. When entering custom regex, one must tell the program which groups contain which info. For most non-advanced regex, this is simply the order of the timestamp and title tag - i.e. \"\\[timestamp\\] num\\. title\" would mean that timestamp group number would be 1 and title would be 2 (num is not captured in a group, as it is useless information).");
+					scrollPane.setViewportView(txtpnHelp);
+					txtpnHelp.setCaretPosition(0);
+				}
+			}
+			{
+				JButton btnTestRegex = new JButton("Test Regex:");
+				btnTestRegex.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						
+						txtMemory.getText();
+						Pattern pattern = Pattern.compile(RegexHelper.regexProcess(regexTextBar.getText()));
+						Matcher matcher = pattern.matcher(txtMemory.getText());
+						String output = "";
+						while (matcher.find()){
+							output += "title: " + matcher.group((int)spinnerTitle.getValue()) + "\n";
+							output += "timestamp: " + matcher.group((int)spinnerTimestamp.getValue()) + "\n";
+						}
+						
+						JOptionPane.showMessageDialog(new Frame(),
+							    output);
+						
+					}
+				});
+				GridBagConstraints gbc_btnTestRegex = new GridBagConstraints();
+				gbc_btnTestRegex.anchor = GridBagConstraints.WEST;
+				gbc_btnTestRegex.insets = new Insets(0, 0, 5, 5);
+				gbc_btnTestRegex.gridx = 0;
+				gbc_btnTestRegex.gridy = 3;
+				panel.add(btnTestRegex, gbc_btnTestRegex);
+			}
+			{
+				txtMemory = new JTextField();
+				txtMemory.setText("Memory 17:48");
+				GridBagConstraints gbc_txtMemory = new GridBagConstraints();
+				gbc_txtMemory.insets = new Insets(0, 0, 5, 0);
+				gbc_txtMemory.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtMemory.gridx = 1;
+				gbc_txtMemory.gridy = 3;
+				panel.add(txtMemory, gbc_txtMemory);
+				txtMemory.setColumns(10);
 			}
 			{
 				JLabel lblExeLocation = new JLabel("sox.exe Location:");
@@ -80,7 +174,7 @@ public class Settings extends JDialog {
 				gbc_lblExeLocation.anchor = GridBagConstraints.WEST;
 				gbc_lblExeLocation.insets = new Insets(0, 0, 5, 5);
 				gbc_lblExeLocation.gridx = 0;
-				gbc_lblExeLocation.gridy = 1;
+				gbc_lblExeLocation.gridy = 5;
 				panel.add(lblExeLocation, gbc_lblExeLocation);
 			}
 			{
@@ -89,27 +183,30 @@ public class Settings extends JDialog {
 				textField.setDragEnabled(true);
 				textField.setColumns(35);
 				GridBagConstraints gbc_textField = new GridBagConstraints();
+				gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 				gbc_textField.insets = new Insets(0, 0, 5, 0);
-				gbc_textField.anchor = GridBagConstraints.NORTHWEST;
+				gbc_textField.anchor = GridBagConstraints.NORTH;
 				gbc_textField.gridx = 1;
-				gbc_textField.gridy = 1;
+				gbc_textField.gridy = 5;
 				panel.add(textField, gbc_textField);
 			}
 			{
 				JLabel lblKeepVideo = new JLabel("Keep Video:");
 				GridBagConstraints gbc_lblKeepVideo = new GridBagConstraints();
+				gbc_lblKeepVideo.anchor = GridBagConstraints.WEST;
 				gbc_lblKeepVideo.insets = new Insets(0, 0, 0, 5);
 				gbc_lblKeepVideo.gridx = 0;
-				gbc_lblKeepVideo.gridy = 2;
+				gbc_lblKeepVideo.gridy = 6;
 				panel.add(lblKeepVideo, gbc_lblKeepVideo);
 			}
 			{
-				chckbxYes = new JCheckBox("Yes");
-				chckbxYes.setSelected(Splitter.keepVideo);
+				keepVid = new JCheckBox("Yes");
+				keepVid.setSelected(Splitter.keepVideo);
 				GridBagConstraints gbc_chckbxYes = new GridBagConstraints();
+				gbc_chckbxYes.anchor = GridBagConstraints.WEST;
 				gbc_chckbxYes.gridx = 1;
-				gbc_chckbxYes.gridy = 2;
-				panel.add(chckbxYes, gbc_chckbxYes);
+				gbc_chckbxYes.gridy = 6;
+				panel.add(keepVid, gbc_chckbxYes);
 			}
 		}
 		{
@@ -131,9 +228,11 @@ public class Settings extends JDialog {
 				JButton btnApply = new JButton("Apply");
 				btnApply.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						Splitter.regex = txtRawJavaRegex.getText();
+						Splitter.regex = RegexHelper.regexProcess(regexTextBar.getText());
+						Splitter.titleGroup = (int)spinnerTitle.getValue();
+						Splitter.timestampGroup = (int)spinnerTimestamp.getValue();
 						Splitter.exeLocation = textField.getText();
-						Splitter.keepVideo = chckbxYes.isSelected();
+						Splitter.keepVideo = keepVid.isSelected();
 					}
 				});
 				{
@@ -141,10 +240,14 @@ public class Settings extends JDialog {
 					btnRestoreDefaults.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							Splitter.regex = Splitter.DEFAULT_REGEX;
-							txtRawJavaRegex.setText(Splitter.DEFAULT_REGEX);
+							Splitter.titleGroup = Splitter.DEFAULT_TITLE_GROUP;
+							spinnerTitle.setValue(Splitter.DEFAULT_TITLE_GROUP);
+							Splitter.timestampGroup = Splitter.DEFAULT_TIMESTAMP_GROUP;
+							spinnerTimestamp.setValue(Splitter.DEFAULT_TIMESTAMP_GROUP);
+							regexTextBar.setText(Splitter.DEFAULT_REGEX);
 							Splitter.exeLocation = Splitter.EXE_LOCATION_DEFAULT;
 							textField.setText(Splitter.EXE_LOCATION_DEFAULT);
-							chckbxYes.setSelected(false);
+							keepVid.setSelected(false);
 						}
 					});
 					btnRestoreDefaults.setActionCommand("OK");
@@ -167,5 +270,4 @@ public class Settings extends JDialog {
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
-
 }

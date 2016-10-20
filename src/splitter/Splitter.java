@@ -11,8 +11,13 @@ public class Splitter {
 	static final String EXE_LOCATION_DEFAULT = "resources/sox-14-4-2/sox.exe";
 	static String exeLocation = EXE_LOCATION_DEFAULT;
 	
-	static final String DEFAULT_REGEX ="([\\d]*\\.?)[ \\t]*(.+?)[ \\t]*([\\d]{0,2}:?[\\d]{1,3}:\\d\\d).*\\n";
+	static final String DEFAULT_REGEX = "title timestamp"; //"([\\d]*\\.?)[ \\t]*(.+?)[ \\t]*([\\d]{0,2}:?[\\d]{1,3}:\\d\\d).*\\n";
+	static final int DEFAULT_TITLE_GROUP = 1;
+	static final int DEFAULT_TIMESTAMP_GROUP = 2;
+	
 	static String regex = DEFAULT_REGEX;
+	static int titleGroup = 1;
+	static int timestampGroup = 2;
 	
 	static boolean keepVideo = false;
 	
@@ -43,10 +48,10 @@ public class Splitter {
 		while (matcher.find()) {
 			
 			if (time != "00:00") 
-				split(url, title, tracknum, parseSeconds(time), parseSeconds(matcher.group(1))-parseSeconds(time));
+				split(url, title, tracknum, parseSeconds(time), parseSeconds(matcher.group(timestampGroup))-parseSeconds(time));
 			
-			title = matcher.group(2);
-			time = matcher.group(1);
+			title = matcher.group(titleGroup);
+			time = matcher.group(timestampGroup);
 			
 			tracknum++;
 		}

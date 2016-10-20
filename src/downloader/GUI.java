@@ -16,6 +16,8 @@ import java.awt.ScrollPane;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.awt.Component;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 public class GUI {
 
@@ -23,6 +25,8 @@ public class GUI {
 
 	public static JTextPane textPane;
 	private static ScrollPane scrollPane;
+	private JMenuBar menuBar;
+	private JMenuItem mntmSettings;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,7 +49,7 @@ public class GUI {
 	private void initialize() {
 		frmDownloader = new JFrame();
 		frmDownloader.setTitle("Downloader");
-		frmDownloader.setBounds(100, 100, 654, 415);
+		frmDownloader.setBounds(100, 100, 788, 513);
 		frmDownloader.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 30, 0, 30, 0 };
@@ -76,6 +80,12 @@ public class GUI {
 
 		scrollPane.add(textPane);
 		frmDownloader.getContentPane().add(scrollPane, gbc_scrollPane);
+		
+		menuBar = new JMenuBar();
+		frmDownloader.setJMenuBar(menuBar);
+		
+		mntmSettings = new JMenuItem("Settings..");
+		menuBar.add(mntmSettings);
 	}
 	
 	public static void addText(String line){
