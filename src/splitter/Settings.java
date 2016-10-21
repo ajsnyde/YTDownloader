@@ -28,6 +28,8 @@ import javax.swing.JTextPane;
 import javax.swing.JSpinner;
 import javax.swing.JScrollPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Settings extends JDialog {
 
@@ -63,17 +65,40 @@ public class Settings extends JDialog {
 			contentPanel.add(panel, gbc_panel);
 			GridBagLayout gbl_panel = new GridBagLayout();
 			gbl_panel.columnWidths = new int[] { 93, 286, 0 };
-			gbl_panel.rowHeights = new int[] { 20, 0, 70, 0, 0, 20, 0, 0 };
+			gbl_panel.rowHeights = new int[] { 0, 20, 0, 70, 0, 0, 20, 0, 0 };
 			gbl_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
 			panel.setLayout(gbl_panel);
+			{
+				JComboBox comboBox = new JComboBox();
+				comboBox.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						regexTextBar.setText(comboBox.getSelectedItem().toString());
+						spinnerTitle.setValue(((RegexSetting) comboBox.getSelectedItem()).titleGroup);
+						spinnerTimestamp.setValue(((RegexSetting) comboBox.getSelectedItem()).timestampGroup);
+						txtMemory.setText(((RegexSetting) comboBox.getSelectedItem()).exampleInput);
+					}
+				});
+				comboBox.setModel(
+						new DefaultComboBoxModel(new RegexSetting[] { new RegexSetting("title timestamp", 1, 2, "Title 0:00"), new RegexSetting("num. title timestamp", 1, 2, "1) Title 0:00"),
+								new RegexSetting("num. title \\(timestamp\\)", 1, 2, "1) Title (0:00)"), new RegexSetting("num. timestamp title", 2, 1, "1) 0:00 Title"),
+								new RegexSetting("num. \"title\" \\(timestamp\\)", 1, 2, "1) \"Title\" (00:00)"), new RegexSetting("timestamp title", 2, 1, "00:00 Title"),
+								new RegexSetting("timestamp \"title\"", 2, 1, "00:00 \"Title\""), new RegexSetting("\\(timestamp\\) title", 2, 1, "(00:00) Title") }));
+
+				GridBagConstraints gbc_comboBox = new GridBagConstraints();
+				gbc_comboBox.insets = new Insets(0, 0, 5, 0);
+				gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+				gbc_comboBox.gridx = 1;
+				gbc_comboBox.gridy = 0;
+				panel.add(comboBox, gbc_comboBox);
+			}
 			{
 				JLabel lblNewLabel = new JLabel("Regex:");
 				GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 				gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
 				gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 				gbc_lblNewLabel.gridx = 0;
-				gbc_lblNewLabel.gridy = 0;
+				gbc_lblNewLabel.gridy = 1;
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			regexTextBar = new JTextField();
@@ -85,7 +110,7 @@ public class Settings extends JDialog {
 				gbc_txtRawJavaRegex.anchor = GridBagConstraints.NORTH;
 				gbc_txtRawJavaRegex.insets = new Insets(0, 0, 5, 0);
 				gbc_txtRawJavaRegex.gridx = 1;
-				gbc_txtRawJavaRegex.gridy = 0;
+				gbc_txtRawJavaRegex.gridy = 1;
 				panel.add(regexTextBar, gbc_txtRawJavaRegex);
 				regexTextBar.setColumns(35);
 			}
@@ -96,7 +121,7 @@ public class Settings extends JDialog {
 				gbc_panel_1.insets = new Insets(0, 0, 5, 0);
 				gbc_panel_1.fill = GridBagConstraints.BOTH;
 				gbc_panel_1.gridx = 0;
-				gbc_panel_1.gridy = 1;
+				gbc_panel_1.gridy = 2;
 				panel.add(panel_1, gbc_panel_1);
 				{
 					JLabel lblTitleGroup = new JLabel("title group #:");
@@ -124,7 +149,7 @@ public class Settings extends JDialog {
 				gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
 				gbc_scrollPane.fill = GridBagConstraints.BOTH;
 				gbc_scrollPane.gridx = 0;
-				gbc_scrollPane.gridy = 2;
+				gbc_scrollPane.gridy = 3;
 				panel.add(scrollPane, gbc_scrollPane);
 				{
 					JTextPane txtpnHelp = new JTextPane();
@@ -156,7 +181,7 @@ public class Settings extends JDialog {
 				gbc_btnTestRegex.anchor = GridBagConstraints.WEST;
 				gbc_btnTestRegex.insets = new Insets(0, 0, 5, 5);
 				gbc_btnTestRegex.gridx = 0;
-				gbc_btnTestRegex.gridy = 3;
+				gbc_btnTestRegex.gridy = 4;
 				panel.add(btnTestRegex, gbc_btnTestRegex);
 			}
 			{
@@ -166,7 +191,7 @@ public class Settings extends JDialog {
 				gbc_txtMemory.insets = new Insets(0, 0, 5, 0);
 				gbc_txtMemory.fill = GridBagConstraints.HORIZONTAL;
 				gbc_txtMemory.gridx = 1;
-				gbc_txtMemory.gridy = 3;
+				gbc_txtMemory.gridy = 4;
 				panel.add(txtMemory, gbc_txtMemory);
 				txtMemory.setColumns(10);
 			}
@@ -180,7 +205,7 @@ public class Settings extends JDialog {
 				GridBagConstraints gbc_btnUpdateYoutubedl = new GridBagConstraints();
 				gbc_btnUpdateYoutubedl.insets = new Insets(0, 0, 5, 5);
 				gbc_btnUpdateYoutubedl.gridx = 0;
-				gbc_btnUpdateYoutubedl.gridy = 4;
+				gbc_btnUpdateYoutubedl.gridy = 5;
 				panel.add(btnUpdateYoutubedl, gbc_btnUpdateYoutubedl);
 			}
 			{
@@ -191,7 +216,7 @@ public class Settings extends JDialog {
 				gbc_txtpnWillUpdateThe.insets = new Insets(0, 0, 5, 0);
 				gbc_txtpnWillUpdateThe.fill = GridBagConstraints.BOTH;
 				gbc_txtpnWillUpdateThe.gridx = 1;
-				gbc_txtpnWillUpdateThe.gridy = 4;
+				gbc_txtpnWillUpdateThe.gridy = 5;
 				panel.add(txtpnWillUpdateThe, gbc_txtpnWillUpdateThe);
 			}
 			{
@@ -200,7 +225,7 @@ public class Settings extends JDialog {
 				gbc_lblExeLocation.anchor = GridBagConstraints.WEST;
 				gbc_lblExeLocation.insets = new Insets(0, 0, 5, 5);
 				gbc_lblExeLocation.gridx = 0;
-				gbc_lblExeLocation.gridy = 5;
+				gbc_lblExeLocation.gridy = 6;
 				panel.add(lblExeLocation, gbc_lblExeLocation);
 			}
 			{
@@ -213,7 +238,7 @@ public class Settings extends JDialog {
 				gbc_textField.insets = new Insets(0, 0, 5, 0);
 				gbc_textField.anchor = GridBagConstraints.NORTH;
 				gbc_textField.gridx = 1;
-				gbc_textField.gridy = 5;
+				gbc_textField.gridy = 6;
 				panel.add(textField, gbc_textField);
 			}
 			{
@@ -222,7 +247,7 @@ public class Settings extends JDialog {
 				gbc_lblKeepVideo.anchor = GridBagConstraints.WEST;
 				gbc_lblKeepVideo.insets = new Insets(0, 0, 0, 5);
 				gbc_lblKeepVideo.gridx = 0;
-				gbc_lblKeepVideo.gridy = 6;
+				gbc_lblKeepVideo.gridy = 7;
 				panel.add(lblKeepVideo, gbc_lblKeepVideo);
 			}
 			{
@@ -231,7 +256,7 @@ public class Settings extends JDialog {
 				GridBagConstraints gbc_chckbxYes = new GridBagConstraints();
 				gbc_chckbxYes.anchor = GridBagConstraints.WEST;
 				gbc_chckbxYes.gridx = 1;
-				gbc_chckbxYes.gridy = 6;
+				gbc_chckbxYes.gridy = 7;
 				panel.add(keepVid, gbc_chckbxYes);
 			}
 		}
