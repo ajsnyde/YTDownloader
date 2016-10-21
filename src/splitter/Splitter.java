@@ -31,9 +31,7 @@ public class Splitter {
 	}
 
 	void download(String url) {
-		if (!new File(
-				"Downloads/" + Engine.getMetaElement(url, "title") + "/" + Engine.getMetaElement(url, "title") + ".mp3")
-						.exists())
+		if (!new File("Downloads/" + Engine.getMetaElement(url, "title") + "/" + Engine.getMetaElement(url, "title") + ".mp3").exists())
 			Engine.exeWait(url, "-oDownloads/%(title)s/%(title)s.%(ext)s", "-x", "--audio-format", "mp3");
 		System.out.println("Done downloading mp3");
 		description = Engine.getMetaElement(url, "description");
@@ -50,8 +48,7 @@ public class Splitter {
 		while (matcher.find()) {
 
 			if (time != "00:00")
-				split(url, title, tracknum, parseSeconds(time),
-						parseSeconds(matcher.group(timestampGroup)) - parseSeconds(time));
+				split(url, title, tracknum, parseSeconds(time), parseSeconds(matcher.group(timestampGroup)) - parseSeconds(time));
 
 			title = matcher.group(titleGroup);
 			time = matcher.group(timestampGroup);
@@ -63,11 +60,11 @@ public class Splitter {
 	void split(String url, String title, int tracknum, int timeStart, int timeEnd) {
 		Process process;
 		try {
-			System.out.println(exeLocation.toString() + " Downloads/" + albumTitle + "/" + albumTitle + ".mp3"
-					+ " Downloads/" + albumTitle + "/" + title + ".mp3" + " trim " + timeStart + " " + timeEnd + "");
+			System.out.println(
+					exeLocation.toString() + " Downloads/" + albumTitle + "/" + albumTitle + ".mp3" + " Downloads/" + albumTitle + "/" + title + ".mp3" + " trim " + timeStart + " " + timeEnd + "");
 
-			process = new ProcessBuilder(exeLocation.toString(), "Downloads/" + albumTitle + "/" + albumTitle + ".mp3",
-					"Downloads/" + albumTitle + "/" + title + ".mp3", "trim", timeStart + "", timeEnd + "").start();
+			process = new ProcessBuilder(exeLocation.toString(), "Downloads/" + albumTitle + "/" + albumTitle + ".mp3", "Downloads/" + albumTitle + "/" + title + ".mp3", "trim", timeStart + "",
+					timeEnd + "").start();
 			process.waitFor();
 
 			String song = "Downloads/" + albumTitle + "/" + title + ".mp3";

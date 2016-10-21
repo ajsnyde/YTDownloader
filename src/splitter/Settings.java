@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import youtube_dl.Engine;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JCheckBox;
@@ -111,8 +113,7 @@ public class Settings extends JDialog {
 				}
 				{
 					spinnerTimestamp = new JSpinner();
-					spinnerTimestamp
-							.setModel(new SpinnerNumberModel(new Integer(2), new Integer(0), null, new Integer(1)));
+					spinnerTimestamp.setModel(new SpinnerNumberModel(new Integer(2), new Integer(0), null, new Integer(1)));
 					panel_1.add(spinnerTimestamp);
 				}
 			}
@@ -168,6 +169,30 @@ public class Settings extends JDialog {
 				gbc_txtMemory.gridy = 3;
 				panel.add(txtMemory, gbc_txtMemory);
 				txtMemory.setColumns(10);
+			}
+			{
+				JButton btnUpdateYoutubedl = new JButton("Update youtube-dl");
+				btnUpdateYoutubedl.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Engine.exe("-U");
+					}
+				});
+				GridBagConstraints gbc_btnUpdateYoutubedl = new GridBagConstraints();
+				gbc_btnUpdateYoutubedl.insets = new Insets(0, 0, 5, 5);
+				gbc_btnUpdateYoutubedl.gridx = 0;
+				gbc_btnUpdateYoutubedl.gridy = 4;
+				panel.add(btnUpdateYoutubedl, gbc_btnUpdateYoutubedl);
+			}
+			{
+				JTextPane txtpnWillUpdateThe = new JTextPane();
+				txtpnWillUpdateThe.setText(
+						"Will update the youtube-dl.exe file - will NOT backup the file before doing so. Updating the underlying downloader may resolve some bugs. For obvious reasons, do not update while the downloader is in use.");
+				GridBagConstraints gbc_txtpnWillUpdateThe = new GridBagConstraints();
+				gbc_txtpnWillUpdateThe.insets = new Insets(0, 0, 5, 0);
+				gbc_txtpnWillUpdateThe.fill = GridBagConstraints.BOTH;
+				gbc_txtpnWillUpdateThe.gridx = 1;
+				gbc_txtpnWillUpdateThe.gridy = 4;
+				panel.add(txtpnWillUpdateThe, gbc_txtpnWillUpdateThe);
 			}
 			{
 				JLabel lblExeLocation = new JLabel("sox.exe Location:");
