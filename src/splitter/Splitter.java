@@ -71,6 +71,10 @@ public class Splitter {
 
 			process = new ProcessBuilder("resources/id3tool.exe", "-c", tracknum + "", song).start();
 			process.waitFor();
+			process = new ProcessBuilder("resources/id3tool.exe", "-a", albumTitle, song).start();
+			process.waitFor();
+			process = new ProcessBuilder("resources/id3tool.exe", "-t", title + "", song).start();
+			process.waitFor();
 
 		} catch (Exception e) {
 			e.printStackTrace();
