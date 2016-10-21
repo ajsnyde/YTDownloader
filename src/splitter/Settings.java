@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class Settings extends JDialog {
 
@@ -67,10 +68,10 @@ public class Settings extends JDialog {
 			gbl_panel.columnWidths = new int[] { 93, 286, 0 };
 			gbl_panel.rowHeights = new int[] { 0, 20, 0, 70, 0, 0, 20, 0, 0 };
 			gbl_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			panel.setLayout(gbl_panel);
 			{
-				JComboBox comboBox = new JComboBox();
+				JComboBox<RegexSetting> comboBox = new JComboBox<RegexSetting>();
 				comboBox.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						regexTextBar.setText(comboBox.getSelectedItem().toString());
@@ -79,8 +80,8 @@ public class Settings extends JDialog {
 						txtMemory.setText(((RegexSetting) comboBox.getSelectedItem()).exampleInput);
 					}
 				});
-				comboBox.setModel(
-						new DefaultComboBoxModel(new RegexSetting[] { new RegexSetting("title timestamp", 1, 2, "Title 0:00"), new RegexSetting("num. title timestamp", 1, 2, "1) Title 0:00"),
+				comboBox.setModel(new DefaultComboBoxModel<RegexSetting>(
+						new RegexSetting[] { new RegexSetting("title timestamp", 1, 2, "Title 0:00"), new RegexSetting("num. title timestamp", 1, 2, "1) Title 0:00"),
 								new RegexSetting("num. title \\(timestamp\\)", 1, 2, "1) Title (0:00)"), new RegexSetting("num. timestamp title", 2, 1, "1) 0:00 Title"),
 								new RegexSetting("num. \"title\" \\(timestamp\\)", 1, 2, "1) \"Title\" (00:00)"), new RegexSetting("timestamp title", 2, 1, "00:00 Title"),
 								new RegexSetting("timestamp \"title\"", 2, 1, "00:00 \"Title\""), new RegexSetting("\\(timestamp\\) title", 2, 1, "(00:00) Title") }));
@@ -94,11 +95,12 @@ public class Settings extends JDialog {
 			}
 			{
 				JLabel lblNewLabel = new JLabel("Regex:");
+				lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 				GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-				gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
+				gbc_lblNewLabel.gridheight = 3;
 				gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 				gbc_lblNewLabel.gridx = 0;
-				gbc_lblNewLabel.gridy = 1;
+				gbc_lblNewLabel.gridy = 0;
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			regexTextBar = new JTextField();
@@ -117,10 +119,9 @@ public class Settings extends JDialog {
 			{
 				JPanel panel_1 = new JPanel();
 				GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-				gbc_panel_1.gridwidth = 2;
 				gbc_panel_1.insets = new Insets(0, 0, 5, 0);
 				gbc_panel_1.fill = GridBagConstraints.BOTH;
-				gbc_panel_1.gridx = 0;
+				gbc_panel_1.gridx = 1;
 				gbc_panel_1.gridy = 2;
 				panel.add(panel_1, gbc_panel_1);
 				{
@@ -154,7 +155,7 @@ public class Settings extends JDialog {
 				{
 					JTextPane txtpnHelp = new JTextPane();
 					txtpnHelp.setText(
-							"The regex above is assisted - that is, certain keywords will yield their regex counterparts, allowing those not familiar with regex to still have a good chance of parsing descriptions. The following tags will be processed accordingly:\r\ntimestamp - a timestamp in standard Youtube format ([\\\\d]{0,2}:?[\\\\d]{1,3}:\\\\d\\\\d)\r\ntitle - a string which is trimmed of outer whitespace\r\nnum - a group of digits (\\d+)\r\n[ ] (space) - any space (\\s+)\r\n\r\nCertain characters (ex. parentheses, brackets, periods) will need to be 'escaped', or preceded by a backslash. For example, '\\(' equates to a literal '('.\r\n\r\nAdditionally, group numbers must also be addressed - the only information that needs to be explicitly grouped is that of the title and the timestamp. When entering custom regex, one must tell the program which groups contain which info. For most non-advanced regex, this is simply the order of the timestamp and title tag - i.e. \"\\[timestamp\\] num\\. title\" would mean that timestamp group number would be 1 and title would be 2 (num is not captured in a group, as it is useless information).");
+							"The regex above is assisted - that is, certain keywords will yield their regex counterparts, allowing those not familiar with regex to still have a good chance of parsing descriptions. The following tags will be processed accordingly:\r\ntimestamp - a timestamp in standard Youtube format ([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\r\ntitle - a string which is trimmed of outer whitespace\r\nnum - a group of digits (?:[\\d]+)\r\n[ ] (space) - any space (\\s+)\r\n\r\nCertain characters (ex. parentheses, brackets, periods) will need to be 'escaped', or preceded by a backslash. For example, '\\(' equates to a literal '('.\r\n\r\nAdditionally, group numbers must also be addressed - the only information that needs to be explicitly grouped is that of the title and the timestamp. When entering custom regex, one must tell the program which groups contain which info. For most non-advanced regex, this is simply the order of the timestamp and title tag - i.e. \"\\[timestamp\\] num\\. title\" would mean that timestamp group number would be 1 and title would be 2 (num is not captured in a group, as it is useless information).");
 					scrollPane.setViewportView(txtpnHelp);
 					txtpnHelp.setCaretPosition(0);
 				}
