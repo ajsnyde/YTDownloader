@@ -1,5 +1,6 @@
 package splitter;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,8 @@ public class AutoRegex {
 		for (Song song : album.songs)
 			System.out.println(song.title + " " + song.number + " " + song.start + "-" + song.end);
 
+		removeCommonalities(description2);
+
 		return album;
 	}
 
@@ -91,14 +94,14 @@ public class AutoRegex {
 				e.printStackTrace();
 			}
 		}
+		removeCommonalities(description);
 		return album;
 	}
 
 	private String removeTimestamps(String line) {
 
 		// take larger portion of line minus the timestamps
-		line = line.replaceAll("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)",
-				"TIMESTAMP");
+		line = line.replaceAll("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)", "TIMESTAMP");
 		int index = line.indexOf("TIMESTAMP");
 		int lengthleft = index;
 		int lengthright = line.length() - index - "TIMESTAMP".length();
@@ -109,6 +112,54 @@ public class AutoRegex {
 
 		return line;
 
+	}
+
+	private String removeCommonalities(String in) {
+
+		String[] lines = in.split("\n");
+
+		ArrayList<Character> common = new ArrayList<Character>();
+		ArrayList<Boolean> same = new ArrayList<Boolean>();
+
+		// get minimum length, will act as condition for looking for
+		// commonalities;
+		int minLength = Integer.MAX_VALUE;
+		for (String line : lines) {
+			minLength = Integer.min(minLength, line.length());
+			System.out.println(line);
+		}
+
+		String regex = "(";
+
+		// start from one side, go to other until common strings end
+		for (int i = 0; i < minLength; ++i) {
+			char compare = '\f'; // placeholder, since chars can't be null;
+			boolean linesCommon = true;
+
+			for (int j = 0; j < lines.length - 1; ++j) {
+				if (compare == '\f')
+					compare = lines[j].charAt(i);
+				else if (Character.isDigit(compare) && Character.isDigit(lines[j].charAt(i))) {
+				} else if (Character.isWhitespace(compare) && Character.isWhitespace(lines[j].charAt(i))) {
+				} else if (compare != lines[j].charAt(i)) {
+					linesCommon = false;
+				}
+				System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
+			}
+
+			if (linesCommon && Character.isDigit(compare)) {
+				regex += "\\d+";
+			} else if (linesCommon && Character.isWhitespace(compare))
+				regex += "\\s+";
+			else if (linesCommon) {
+				regex += compare;
+			}
+		}
+		regex += ")";
+
+		System.out.println(regex);
+
+		return in;
 	}
 
 	// returns true if all lines have 2 timestamps
