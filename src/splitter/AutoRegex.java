@@ -94,7 +94,14 @@ public class AutoRegex {
 				e.printStackTrace();
 			}
 		}
-		removeCommonalities(description);
+		description = removeCommonalities(description);
+		String reverseDes = "";
+		for (String line : description.split("\n"))
+			reverseDes += new StringBuilder(line).reverse().toString() + "\n";
+		removeCommonalities(reverseDes);
+		description = "";
+		for (String line : reverseDes.split("\n"))
+			description += new StringBuilder(line).reverse().toString() + "\n";
 		return album;
 	}
 
@@ -143,6 +150,7 @@ public class AutoRegex {
 				} else if (Character.isWhitespace(compare) && Character.isWhitespace(lines[j].charAt(i))) {
 				} else if (compare != lines[j].charAt(i)) {
 					linesCommon = false;
+					break;
 				}
 				System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
 			}
@@ -152,14 +160,21 @@ public class AutoRegex {
 			} else if (linesCommon && Character.isWhitespace(compare))
 				regex += "\\s+";
 			else if (linesCommon) {
+				if (compare == '(' || compare == ')' || compare == '.' || compare == '[' || compare == ']')
+					regex += "\\";
 				regex += compare;
 			}
 		}
 		regex += ")";
-
 		System.out.println(regex);
+		String output = "";
+		for (String line : lines) {
+			output += line.replaceFirst(regex, "") + "\n";
+		}
+		output = output.substring(0, output.length() - 1);
 
-		return in;
+		System.out.println(output);
+		return output;
 	}
 
 	// returns true if all lines have 2 timestamps
@@ -176,7 +191,7 @@ public class AutoRegex {
 		String pre = "";
 		for (String line : description.split("\n"))
 			if (containsTimestamps(line) > 0)
-				pre += line + "\n";
+				pre += line.trim() + "\n";
 		return pre.substring(0, pre.length() - 2); // gets rid of extra newline
 	}
 
