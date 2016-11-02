@@ -96,21 +96,5 @@ public class Launcher {
 		gbc_btnSplitByTimestamps.gridx = 3;
 		gbc_btnSplitByTimestamps.gridy = 1;
 		frmYoutubemusic.getContentPane().add(btnSplitByTimestamps, gbc_btnSplitByTimestamps);
-
-		JLabel lblNewLabel_1 = new JLabel("What do you want to do?");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.gridwidth = 3;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 1;
-		gbc_lblNewLabel_1.gridy = 3;
-		frmYoutubemusic.getContentPane().add(lblNewLabel_1, gbc_lblNewLabel_1);
-
-		JButton btnNewButton = new JButton("Convert a youtube video to a music album!");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.gridwidth = 3;
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 1;
-		gbc_btnNewButton.gridy = 4;
-		frmYoutubemusic.getContentPane().add(btnNewButton, gbc_btnNewButton);
 	}
 }
