@@ -4,7 +4,41 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+ * DOCUMENTATION:
+ * This class turns raw descriptions (implicitly from Youtube videos) into Album objects. The description
+ * MUST contain some lines with exactly one or exactly two timestamps (ex. 3:34:13)
+ * To do this, the class removes all lines from the input that don't contain timestamps
+ * It then runs through the timestamps (different process based on number of timestamps) and creates song
+ * times and numbers. The timestamps are then removed, along with the SMALLER side of the string as split
+ * by the timestamp. For example, "asdfasdfasdf3:31jkl;" would be read and returned as "asdfasdfasdf"
+ * Finally, all the lines are compared and common characters are removed via classification and regex.
+ * This occurs both on the left side moving inward and on the right side moving inward
+ * 
+ * Ex.
+ * 
+ * 1.) asdf (test)
+ * 20.) jkl; (test)
+ * 
+ * the numbers are detected and removed with '\d+' regex
+ * 
+ * " (test)" is removed based on identical characters and whitespace (essentially " \(test\)" regex)
+ * 
+ * Pass 2:
+ * Because the ".) " didn't line up correctly to trigger on the first pass (due to the variable # digits),
+ * multiple passes are often necessary. In the second left pass, these characters are detected as identical
+ * and are removed.
+ * 
+ * ...
+ * End passes
+ * 
+ * After the process, the resulting lines (hopefully containing unique and minimally formatted titles) are
+ * used to populate the titles in the songs that were made earlier.
+ */
+
 public class AutoRegex {
+
+	public int numPasses = 4;
 
 	public Album getAlbum(String description, int length) {
 
@@ -14,8 +48,10 @@ public class AutoRegex {
 
 		if (isDoubleTimestamped(description))
 			return DoubleTimestampMethod(description);
-		else
+		else if (isSingleTimestamped(description))
 			return SingleTimestampMethod(description, length);
+		else
+			return new Album();
 	}
 
 	private Album SingleTimestampMethod(String description, int length) {
@@ -25,6 +61,7 @@ public class AutoRegex {
 		Song lastSong = new Song();
 		for (String line : description.split("\n")) {
 			Song song = new Song();
+			lineNum++;
 			String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
 			Pattern r = Pattern.compile(pattern);
 			Matcher m = r.matcher(line);
@@ -39,7 +76,6 @@ public class AutoRegex {
 				album.songs.add(lastSong);
 			}
 			lastSong = song;
-
 		}
 		lastSong.end = length;
 		album.songs.add(lastSong);
@@ -50,15 +86,10 @@ public class AutoRegex {
 			description2 += removeTimestamps(line) + "\n";
 		}
 
-		// TODO: remove commonalities in resulting lines before setting
-		// resulting lines as titles
+		// for (Song song : album.songs)
+		// System.out.println(song.title + " " + song.number + " " + song.start + "-" + song.end);
 
-		System.out.println(description2);
-
-		for (Song song : album.songs)
-			System.out.println(song.title + " " + song.number + " " + song.start + "-" + song.end);
-
-		removeCommonalities(description2);
+		description2 = removeCommonalities(description2);
 
 		return album;
 	}
@@ -67,6 +98,7 @@ public class AutoRegex {
 		Album album = new Album();
 
 		int lineNum = 0;
+		String description2 = "";
 		for (String line : description.split("\n")) {
 			Song song = new Song();
 			try {
@@ -80,35 +112,33 @@ public class AutoRegex {
 				m.find();
 				song.end = RegexHelper.parseSeconds(m.group(1));
 
-				// TODO: add lines (without timestamps and other garbage)
-				// together, find commonalities, and remove commonalities.
 				line = removeTimestamps(line);
-
+				// System.out.println(line);
 				song.number = lineNum++;
-				song.title = line;
-
-				System.out.println(line + " " + lineNum + " " + song.start + "-" + song.end);
+				description2 += line + "\n";
+				// System.out.println(line + " " + lineNum + " " + song.start + "-" + song.end);
 
 				album.songs.add(song);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		description = removeCommonalities(description);
-		String reverseDes = "";
-		for (String line : description.split("\n"))
-			reverseDes += new StringBuilder(line).reverse().toString() + "\n";
-		removeCommonalities(reverseDes);
-		description = "";
-		for (String line : reverseDes.split("\n"))
-			description += new StringBuilder(line).reverse().toString() + "\n";
+		description2 = removeCommonalities(description2);
+
+		String[] lines = description2.split("\n");
+		for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
+			album.songs.get(i).title = lines[i];
+		}
+
 		return album;
 	}
 
+	// Finds and deletes timestamps, returning the resulting left or right side, whichever is larger
 	private String removeTimestamps(String line) {
 
 		// take larger portion of line minus the timestamps
-		line = line.replaceAll("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)", "TIMESTAMP");
+		line = line.replaceFirst("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)",
+				"TIMESTAMP");
 		int index = line.indexOf("TIMESTAMP");
 		int lengthleft = index;
 		int lengthright = line.length() - index - "TIMESTAMP".length();
@@ -118,10 +148,33 @@ public class AutoRegex {
 		line = lengthleft > lengthright ? line.substring(0, index) : line.substring(index + "TIMESTAMP".length());
 
 		return line;
-
 	}
 
+	// removes left and right commonalities over a number of passes
 	private String removeCommonalities(String in) {
+		for (int i = 0; i < numPasses; ++i) {
+			in = removeLeftCommonalities(in);
+			in = removeRightCommonalities(in);
+		}
+		System.out.println(in);
+		return in;
+	}
+
+	// reverses the string, revmoves left commounalities, reverses again and returns
+	private String removeRightCommonalities(String in) {
+		String reverse = "";
+		for (String line : in.split("\n")) {
+			reverse += new StringBuilder(line).reverse() + "\n";
+		}
+		reverse = removeLeftCommonalities(reverse);
+		String output = "";
+		for (String line : in.split("\n")) {
+			output += new StringBuilder(line).reverse() + "\n";
+		}
+		return output;
+	}
+
+	private String removeLeftCommonalities(String in) {
 
 		String[] lines = in.split("\n");
 
@@ -133,7 +186,7 @@ public class AutoRegex {
 		int minLength = Integer.MAX_VALUE;
 		for (String line : lines) {
 			minLength = Integer.min(minLength, line.length());
-			System.out.println(line);
+			// System.out.println(line);
 		}
 
 		String regex = "(";
@@ -152,7 +205,7 @@ public class AutoRegex {
 					linesCommon = false;
 					break;
 				}
-				System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
+				// System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
 			}
 
 			if (linesCommon && Character.isDigit(compare)) {
@@ -173,7 +226,6 @@ public class AutoRegex {
 		}
 		output = output.substring(0, output.length() - 1);
 
-		System.out.println(output);
 		return output;
 	}
 
@@ -187,12 +239,21 @@ public class AutoRegex {
 		return true;
 	}
 
+	private boolean isSingleTimestamped(String description) {
+
+		for (String line : description.split("\n"))
+			if (!(containsTimestamps(line) == 1)) {
+				return false;
+			}
+		return true;
+	}
+
 	private String preprocess(String description) {
 		String pre = "";
 		for (String line : description.split("\n"))
 			if (containsTimestamps(line) > 0)
 				pre += line.trim() + "\n";
-		return pre.substring(0, pre.length() - 2); // gets rid of extra newline
+		return pre.substring(0, pre.length() - 1); // gets rid of extra newline
 	}
 
 	private int containsTimestamps(String line) {
