@@ -155,9 +155,17 @@ public class AutoRegex {
 		for (int i = 0; i < numPasses; ++i) {
 			in = removeLeftCommonalities(in);
 			in = removeRightCommonalities(in);
+			in = trimLines(in);
 		}
 		System.out.println(in);
 		return in;
+	}
+
+	private String trimLines(String in) {
+		String out = "";
+		for (String line : in.split("\n"))
+			out += line.trim() + "\n";
+		return out;
 	}
 
 	// reverses the string, revmoves left commounalities, reverses again and returns
