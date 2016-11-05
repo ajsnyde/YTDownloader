@@ -1,24 +1,25 @@
-package youtube_dl;
+package engine;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class Execute implements Runnable {
-	String arguments = "";
+	HashMap<String, Object> parameters;
 	public BufferedReader input;
 	Process p;
 
-	Execute(String arguments) {
-		this.arguments = arguments;
+	Execute(HashMap<String, Object> parameters) {
+		this.parameters = parameters;
 	}
 
 	@Override
 	public void run() {
 		System.out.println("Running Executable");
 		try {
-
 			synchronized (this) {
-				p = Runtime.getRuntime().exec(Engine.exeLocation + " " + arguments);
+				p = Runtime.getRuntime()
+						.exec(parameters.get("downloadExeLocation") + " " + parameters.get("downloadExeArguments"));
 				InputStreamReader re = new InputStreamReader(p.getInputStream());
 				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				notify();
