@@ -3,32 +3,47 @@ package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.border.BevelBorder;
 
 import engine.Task;
 import engine.TaskDownloadVideo;
+import engine.TaskManager;
 import tables.DownloadTableModel;
 import tables.ProgressCellRenderer;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class GUI {
 
 	private JFrame frmYetAnotherYoutube;
+	private DownloadTableModel model;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -98,10 +113,15 @@ public class GUI {
 		bottomPanel.add(bottomScrollPane, BorderLayout.NORTH);
 		topPanel.setLayout(new BorderLayout(0, 0));
 
+		JPopupMenu menu = new JPopupMenu("Popup");
+		menu.add(new JLabel("Selected Item"));
+		JPopupMenu menu2 = new JPopupMenu("Popup");
+		menu2.add(new JLabel("Not Selected Item"));
+
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		tasks.add(new TaskDownloadVideo(new HashMap<String, Object>()));
-		tasks.add(new TaskDownloadVideo(new HashMap<String, Object>()));
-		JTable downloadTable = new JTable(new DownloadTableModel(tasks));
+		model = new DownloadTableModel(tasks);
+		JTable downloadTable = new JTable(model);
+
 		downloadTable.setDefaultRenderer(Double.class, new ProgressCellRenderer());
 		downloadTable.setFillsViewportHeight(true);
 
@@ -110,6 +130,58 @@ public class GUI {
 		topPanel.add(topScrollPane, BorderLayout.CENTER);
 		splitPaneContainer.add(splitPane);
 
+		downloadTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int r = downloadTable.rowAtPoint(e.getPoint());
+				if (r >= 0 && r < downloadTable.getRowCount()) {
+					downloadTable.setRowSelectionInterval(r, r);
+				} else {
+					downloadTable.clearSelection();
+				}
+
+				int rowindex = downloadTable.getSelectedRow();
+				if (e.isPopupTrigger() && rowindex < 0) {
+					menu2.show(e.getComponent(), e.getX(), e.getY());
+				} else if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
+
+		KeyboardFocusManager ky = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+
+		ky.addKeyEventDispatcher(new KeyEventDispatcher() {
+
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (e.getID() == KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V)
+						&& ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+					try {
+						String[] urls = ((String) Toolkit.getDefaultToolkit().getSystemClipboard()
+								.getData(DataFlavor.stringFlavor)).split("\n");
+
+						for (String url : urls) {
+							addVideoDownloadTask(url);
+						}
+
+					} catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				return true;
+			}
+		});
+
+		// addVideoDownloadTask("https://www.youtube.com/watch?v=qgzF9fCsSw0");
+
 	}
 
+	public void addVideoDownloadTask(String url) {
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
+		parameters.put("downloadExeArguments", url);
+		parameters.put("model", model);
+		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
+	}
 }

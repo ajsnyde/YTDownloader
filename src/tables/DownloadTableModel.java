@@ -62,6 +62,11 @@ public class DownloadTableModel extends AbstractTableModel {
 		}
 	}
 
+	public void addTask(Task task) {
+		tasks.add(task);
+		this.fireTableDataChanged();
+	}
+
 	// TODO: Update in accordance to columns
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
