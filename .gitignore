@@ -3,3 +3,4 @@
 bin
 *.mp3
 /Downloads/meta/*.json
+/Downloads/*
