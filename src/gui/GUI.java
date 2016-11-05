@@ -10,11 +10,20 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.UIManager;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.border.BevelBorder;
+
+import engine.Task;
+import engine.TaskDownloadVideo;
+import tables.DownloadTableModel;
+import tables.ProgressCellRenderer;
+
 import java.awt.Dimension;
 
 public class GUI {
@@ -89,10 +98,18 @@ public class GUI {
 		bottomPanel.add(bottomScrollPane, BorderLayout.NORTH);
 		topPanel.setLayout(new BorderLayout(0, 0));
 
-		JScrollPane topScrollPane = new JScrollPane();
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		tasks.add(new TaskDownloadVideo(new HashMap<String, Object>()));
+		tasks.add(new TaskDownloadVideo(new HashMap<String, Object>()));
+		JTable downloadTable = new JTable(new DownloadTableModel(tasks));
+		downloadTable.setDefaultRenderer(Double.class, new ProgressCellRenderer());
+		downloadTable.setFillsViewportHeight(true);
+
+		JScrollPane topScrollPane = new JScrollPane(downloadTable);
 		topScrollPane.setMinimumSize(new Dimension(0, 0));
 		topPanel.add(topScrollPane, BorderLayout.CENTER);
 		splitPaneContainer.add(splitPane);
+
 	}
 
 }
