@@ -24,7 +24,6 @@ public class Execute implements Runnable {
 				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				notify();
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

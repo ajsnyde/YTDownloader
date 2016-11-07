@@ -1,6 +1,5 @@
 package engine;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 
@@ -11,13 +10,14 @@ import java.util.HashMap;
 
 public abstract class Task implements Runnable {
 	public String name;
-	public long size;
+	public String size;
 	public Double progress = 0.0;
 	public String status;
+	public String speed;
 	public HashMap<String, Object> parameters; // contains parameters for Task to use
 	public Instant timeCreated = Instant.now();
 	public Instant timeStarted;
 	public Instant timeCompleted;
-	public Duration eta;
+	public String eta;
 	public int priority;
 }

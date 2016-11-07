@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskManager implements Runnable {
 	Vector<Task> tasks = new Vector<Task>();
-	public static AtomicInteger MAX_THREADS = new AtomicInteger(5);
+	public static AtomicInteger MAX_THREADS = new AtomicInteger(20);
 	private static AtomicInteger CUR_THREADS = new AtomicInteger(0);
 	private static TaskManager instance = null;
 
@@ -38,14 +38,16 @@ public class TaskManager implements Runnable {
 	private void maintainThreadCount() {
 		while (CUR_THREADS.get() < MAX_THREADS.get() && tasks.size() > 0) {
 			new Thread(tasks.remove(0)).start();
-			CUR_THREADS.incrementAndGet();
 			System.out.println(CUR_THREADS.get());
 		}
 	}
 
 	public void decreaseThreadCount() {
 		CUR_THREADS.decrementAndGet();
-		System.out.println(CUR_THREADS.get());
+	}
+
+	public void increaseThreadCount() {
+		CUR_THREADS.incrementAndGet();
 	}
 
 	public int getThreadCount() {

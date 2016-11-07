@@ -180,7 +180,8 @@ public class GUI {
 	public void addVideoDownloadTask(String url) {
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
-		parameters.put("downloadExeArguments", url);
+		parameters.put("downloadExeArguments",
+				"--write-info-json -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + url);
 		parameters.put("model", model);
 		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
 	}

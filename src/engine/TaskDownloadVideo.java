@@ -9,16 +9,17 @@ import tables.DownloadTableModel;
 //should accept ONE url with parameters for downloading (meta, video, etc.)
 public class TaskDownloadVideo extends Task {
 
-	final Pattern percentage = Pattern.compile("(\\d+(\\.)?\\d+)%");
+	final Pattern downloadStats = Pattern.compile(
+			"(\\d+\\.?\\d+)% of (\\d+\\.\\d+[MK]iB)\\s+at\\s+(\\d+\\.\\d+[MK]iB\\/s)\\s+ETA\\s+(\\d+:\\d+:?\\d*)");
 
 	public TaskDownloadVideo(HashMap<String, Object> parameters) {
 		this.parameters = parameters;
-
 		((DownloadTableModel) parameters.get("model")).addTask(this);
 	}
 
 	@Override
 	public void run() {
+		TaskManager.getInstance().increaseThreadCount();
 		try {
 			Execute execute = new Execute(parameters);
 			Thread thread = new Thread(execute, "test");
@@ -32,7 +33,6 @@ public class TaskDownloadVideo extends Task {
 			}
 			String line;
 			while ((line = execute.input.readLine()) != null) {
-				// TODO: Parse line and update appropriate GUI components, as passed in through parameters
 				parseLine(line);
 				System.out.println(line);
 			}
@@ -47,13 +47,13 @@ public class TaskDownloadVideo extends Task {
 	void parseLine(String line) {
 		if (line.contains("[download]")) {
 			try {
-				Matcher m = percentage.matcher(line);
+				Matcher m = downloadStats.matcher(line);
 				if (m.find()) {
-
 					progress = Double.parseDouble(m.group(1));
-					System.out.println(progress);
+					size = m.group(2);
+					speed = m.group(3);
+					eta = m.group(4);
 					((DownloadTableModel) parameters.get("model")).fireTableDataChanged();
-
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

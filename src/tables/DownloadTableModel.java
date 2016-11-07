@@ -15,9 +15,9 @@ public class DownloadTableModel extends AbstractTableModel {
 	private static final int COL_STATUS = 2;
 	private static final int COL_SIZE = 3;
 	private static final int COL_ETA = 4;
-	private static final int COL_PRIORITY = 5;
+	private static final int COL_SPEED = 5;
 
-	private static String[] headers = new String[] { "Name", "Progress", "Status", "Size", "ETA", "Priority" };
+	private static String[] headers = new String[] { "Name", "Progress", "Status", "Size", "ETA", "Speed" };
 
 	private List<Task> tasks;
 
@@ -55,8 +55,8 @@ public class DownloadTableModel extends AbstractTableModel {
 			return task.size;
 		case COL_ETA:
 			return task.eta;
-		case COL_PRIORITY:
-			return task.priority;
+		case COL_SPEED:
+			return task.speed;
 		default:
 			throw new IllegalArgumentException(String.format("Column %d is outside of the column range", columnIndex));
 		}
