@@ -158,6 +158,7 @@ public class GUI {
 				if (e.getID() == KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V)
 						&& ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 					try {
+						addTaskGUI("Test");
 						String[] urls = ((String) Toolkit.getDefaultToolkit().getSystemClipboard()
 								.getData(DataFlavor.stringFlavor)).split("\n");
 
@@ -184,5 +185,9 @@ public class GUI {
 				"--write-info-json -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + url);
 		parameters.put("model", model);
 		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
+	}
+
+	public void addTaskGUI(String url) {
+		new AddTask(url).setVisible(true);
 	}
 }

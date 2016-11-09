@@ -13,14 +13,18 @@ import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.JProgressBar;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class AddTask extends JFrame {
 
 	private JPanel contentPane;
+	private ArrayList<String> pastFiles = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -54,9 +58,9 @@ public class AddTask extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 0, 0, 0, 0 };
-		gbl_panel.rowHeights = new int[] { 0, 0, 56, 0, 0 };
+		gbl_panel.rowHeights = new int[] { 0, 0, 38, 40, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
 		JPanel panel_1 = new JPanel();
@@ -70,10 +74,23 @@ public class AddTask extends JFrame {
 		panel.add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 
-		JComboBox comboBox = new JComboBox();
+		JComboBox comboBox = new JComboBox(pastFiles.toArray());
 		panel_1.add(comboBox);
 
 		JButton btnBrowse = new JButton("Browse...");
+		btnBrowse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(fc);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					comboBox.addItem(file.getAbsolutePath());
+					comboBox.setSelectedItem(file.getAbsolutePath());
+				} else {
+				}
+			}
+		});
 		panel_1.add(btnBrowse, BorderLayout.EAST);
 
 		JPanel panel_2 = new JPanel();
