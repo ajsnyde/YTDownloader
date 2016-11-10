@@ -11,8 +11,6 @@ import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
-
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -23,7 +21,6 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.border.BevelBorder;
@@ -38,7 +35,6 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 public class GUI {
 
@@ -158,24 +154,19 @@ public class GUI {
 				if (e.getID() == KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V)
 						&& ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 					try {
-						addTaskGUI("Test");
+
 						String[] urls = ((String) Toolkit.getDefaultToolkit().getSystemClipboard()
 								.getData(DataFlavor.stringFlavor)).split("\n");
 
-						for (String url : urls) {
-							addVideoDownloadTask(url);
-						}
+						addTaskGUI(urls);
 
-					} catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
 				return true;
 			}
 		});
-
-		// addVideoDownloadTask("https://www.youtube.com/watch?v=qgzF9fCsSw0");
-
 	}
 
 	public void addVideoDownloadTask(String url) {
@@ -187,7 +178,7 @@ public class GUI {
 		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
 	}
 
-	public void addTaskGUI(String url) {
-		new AddTask(url).setVisible(true);
+	public void addTaskGUI(String[] urls) {
+		new AddTask(urls).setVisible(true);
 	}
 }

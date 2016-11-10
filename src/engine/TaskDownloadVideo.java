@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +15,8 @@ public class TaskDownloadVideo extends Task {
 
 	public TaskDownloadVideo(HashMap<String, Object> parameters) {
 		this.parameters = parameters;
-		((DownloadTableModel) parameters.get("model")).addTask(this);
+		if (parameters.get("model") != null)
+			((DownloadTableModel) parameters.get("model")).addTask(this);
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class TaskDownloadVideo extends Task {
 				parseLine(line);
 				System.out.println(line);
 			}
-
+			updateProgress(100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -53,11 +55,16 @@ public class TaskDownloadVideo extends Task {
 					size = m.group(2);
 					speed = m.group(3);
 					eta = m.group(4);
-					((DownloadTableModel) parameters.get("model")).fireTableDataChanged();
+					if (parameters.get("model") != null)
+						((DownloadTableModel) parameters.get("model")).fireTableDataChanged();
+					updateProgress((int) Double.parseDouble(m.group(1)));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		if (line.contains("[info] Writing video description metadata as JSON to: ")) {
+			parameters.put("metaDataFile", new File(line.substring(54)));
 		}
 	}
 }

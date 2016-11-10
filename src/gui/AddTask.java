@@ -10,6 +10,10 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.TitledBorder;
+
+import engine.TaskDownloadVideo;
+import engine.TaskManager;
+
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JComboBox;
@@ -19,18 +23,22 @@ import javax.swing.JProgressBar;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 
 public class AddTask extends JFrame {
 
 	private JPanel contentPane;
 	private ArrayList<String> pastFiles = new ArrayList<String>();
+	JProgressBar progressBar = new JProgressBar();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddTask frame = new AddTask("youtube url here");
+					String urls[] = { "https://www.youtube.com/watch?v=Wr70mWusOgA" };
+
+					AddTask frame = new AddTask(urls);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,13 +47,13 @@ public class AddTask extends JFrame {
 		});
 	}
 
-	public AddTask(String url) {
+	public AddTask(String[] urls) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setTitle(url);
+		setTitle(urls[0]);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 200);
@@ -128,7 +136,6 @@ public class AddTask extends JFrame {
 		gbc_btnNewButton.gridy = 0;
 		panel_2.add(btnNewButton, gbc_btnNewButton);
 
-		JProgressBar progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 		progressBar.setIndeterminate(true);
 		GridBagConstraints gbc_progressBar = new GridBagConstraints();
@@ -137,6 +144,18 @@ public class AddTask extends JFrame {
 		gbc_progressBar.gridx = 1;
 		gbc_progressBar.gridy = 0;
 		panel_2.add(progressBar, gbc_progressBar);
+		grabMeta(urls);
+	}
+
+	void grabMeta(String[] urls) {
+
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
+		parameters.put("downloadExeArguments",
+				"--write-info-json --skip-download -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
+						+ urls[0]);
+		parameters.put("progressBar", progressBar);
+		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
 	}
 
 }
