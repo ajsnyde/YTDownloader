@@ -11,8 +11,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.TitledBorder;
 
+import engine.Task;
 import engine.TaskDownloadVideo;
 import engine.TaskManager;
+import engine.TaskTask;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -24,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class AddTask extends JFrame {
@@ -149,13 +152,19 @@ public class AddTask extends JFrame {
 
 	void grabMeta(String[] urls) {
 
-		HashMap<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
-		parameters.put("downloadExeArguments",
-				"--write-info-json --skip-download -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
-						+ urls[0]);
-		parameters.put("progressBar", progressBar);
-		TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
-	}
+		Vector<Task> tasks = new Vector<Task>();
 
+		for (String url : urls) {
+			HashMap<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
+			parameters.put("downloadExeArguments",
+					"--write-info-json --skip-download -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
+							+ url);
+			tasks.add(new TaskDownloadVideo(parameters));
+		}
+		HashMap<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("tasks", tasks);
+		parameters.put("progressBar", progressBar);
+		TaskManager.getInstance().addTask(new TaskTask(parameters));
+	}
 }
