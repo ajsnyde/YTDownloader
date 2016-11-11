@@ -21,7 +21,7 @@ public class TaskDownloadVideo extends Task {
 
 	@Override
 	public void run() {
-		TaskManager.getInstance().increaseThreadCount();
+		increaseParent();
 		try {
 			Execute execute = new Execute(parameters);
 			Thread thread = new Thread(execute, "test");
@@ -42,7 +42,7 @@ public class TaskDownloadVideo extends Task {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			TaskManager.getInstance().decreaseThreadCount();
+			decreaseParent();
 		}
 	}
 

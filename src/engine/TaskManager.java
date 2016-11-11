@@ -3,7 +3,7 @@ package engine;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TaskManager implements Runnable {
+public class TaskManager implements Runnable, ThreadTracker {
 	Vector<Task> tasks = new Vector<Task>();
 	public static AtomicInteger MAX_THREADS = new AtomicInteger(20);
 	private static AtomicInteger CUR_THREADS = new AtomicInteger(0);
@@ -36,7 +36,7 @@ public class TaskManager implements Runnable {
 	}
 
 	private void maintainThreadCount() {
-		while (CUR_THREADS.get() < MAX_THREADS.get() && tasks.size() > 0) {
+		while (canIncrease() && tasks.size() > 0) {
 			new Thread(tasks.remove(0)).start();
 			System.out.println(CUR_THREADS.get());
 		}
@@ -52,5 +52,9 @@ public class TaskManager implements Runnable {
 
 	public int getThreadCount() {
 		return CUR_THREADS.get();
+	}
+
+	public boolean canIncrease() {
+		return CUR_THREADS.get() < MAX_THREADS.get();
 	}
 }

@@ -20,8 +20,7 @@ public class TaskTask extends Task {
 
 	@Override
 	public void run() {
-		// TODO: Find nicer solution to thread count problem
-		TaskManager.getInstance().increaseThreadCount();
+		increaseParent();
 		try {
 			for (int i = 0; i < ((Vector<Task>) parameters.get("tasks")).size(); ++i) {
 				((Vector<Task>) parameters.get("tasks")).get(i).run();
@@ -30,7 +29,7 @@ public class TaskTask extends Task {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			TaskManager.getInstance().decreaseThreadCount();
+			decreaseParent();
 		}
 	}
 }
