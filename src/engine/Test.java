@@ -12,7 +12,7 @@ public class Test {
 		// This is merely an example and isn't absolutely needed with those tasks. In the future, more tasks (ex. conversionTasks) WILL require completion of prior tasks before they can run.
 
 		HashMap<String, Object> multiParameters = new HashMap<String, Object>();
-		multiParameters.put("maxThreads", 15);
+		multiParameters.put("maxThreads", 3);
 		Vector<Task> tasktasks = new Vector<Task>();
 
 		for (int i = 0; i < 5; ++i) {
