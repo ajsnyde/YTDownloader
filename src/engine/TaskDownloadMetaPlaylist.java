@@ -2,22 +2,17 @@ package engine;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import tables.DownloadTableModel;
-
 //should accept ONE url with parameters for downloading (meta, video, etc.)
-public class TaskDownloadVideo extends Task {
+public class TaskDownloadMetaPlaylist extends Task {
 
-	final Pattern downloadStats = Pattern.compile(
-			"(\\d+\\.?\\d+)% of (\\d+\\.\\d+[MK]iB)\\s+at\\s+(\\d+\\.\\d+[MK]iB\\/s)\\s+ETA\\s+(\\d+:\\d+:?\\d*)");
 	final Pattern progressNumber = Pattern.compile("(\\d+) of (\\d+)");
 
-	public TaskDownloadVideo(HashMap<String, Object> parameters) {
+	public TaskDownloadMetaPlaylist(HashMap<String, Object> parameters) {
 		this.parameters = parameters;
-		if (parameters.get("model") != null)
-			((DownloadTableModel) parameters.get("model")).addTask(this);
 	}
 
 	@Override
@@ -50,24 +45,9 @@ public class TaskDownloadVideo extends Task {
 	void parseLine(String line) {
 		if (line.contains("[download]")) {
 			try {
-				Matcher m = downloadStats.matcher(line);
-				if (m.find()) {
-					progress = Double.parseDouble(m.group(1));
-					size = m.group(2);
-					speed = m.group(3);
-					eta = m.group(4);
-					if (parameters.get("model") != null)
-						((DownloadTableModel) parameters.get("model")).fireTableDataChanged();
-					updateProgress(progress.intValue());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			try {
 				Matcher m = progressNumber.matcher(line);
 				if (m.find()) {
-					progress = Integer.parseInt(m.group(1)) / (double) Integer.parseInt(m.group(2));
+					progress = 100 * (Double.parseDouble(m.group(1)) / Double.parseDouble(m.group(2)));
 					updateProgress(progress.intValue());
 				}
 			} catch (Exception e) {
@@ -75,7 +55,9 @@ public class TaskDownloadVideo extends Task {
 			}
 		}
 		if (line.contains("[info] Writing video description metadata as JSON to: ")) {
-			parameters.put("metaDataFile", new File(line.substring(54)));
+			if (parameters.get("metaDataFiles") == null)
+				parameters.put("metaDataFiles", new Vector<File>());
+			((Vector<File>) (parameters.get("metaDataFiles"))).add(new File(line.substring(54)));
 		}
 	}
 }
