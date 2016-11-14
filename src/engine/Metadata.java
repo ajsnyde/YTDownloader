@@ -60,4 +60,9 @@ public class Metadata {
 			reader.close();
 		}
 	}
+
+	// Considering sanitizing filenames...
+	String sanitize(String in) {
+		return in.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+	}
 }

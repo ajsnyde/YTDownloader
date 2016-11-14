@@ -29,15 +29,29 @@ public class TaskSplitByAlbum extends Task {
 			System.out.println(album.length);
 			Metadata meta = (Metadata) parameters.get("metadata");
 
+			int i = 1;
+
 			for (Song song : album.songs) {
 				System.out.println("Song being processed");
 				System.out.println(song.title + " " + song.start + " " + song.end);
 
-				Process process = new ProcessBuilder("resources/sox-14-4-2/sox.exe",
-						"Downloads/" + meta.uploader + "/" + meta.uploader + " - " + meta.title + ".mp3",
-						"Downloads/" + meta.uploader + "/" + song.title + ".mp3", "trim", song.start + "",
-						song.end + "").start();
+				// NOTE: IT SEEMS THAT SOX CANNOT CREATE DIRECTORIES. ADDING meta.title BETWEEN meta.uploader AND song.title RESULTS IN FAIL!
+
+				// This should alleviate that issue assuming proper permissions.
+				File dir = new File("Downloads/" + meta.uploader + "/" + meta.title);
+				boolean success = dir.mkdir();
+
+				Process process = new ProcessBuilder("resources/sox-14-4-2/sox.exe", "Downloads/" + meta.uploader + "/" + meta.uploader + " - " + meta.title + ".mp3",
+						"Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3", "trim", song.start + "", song.end + "").start();
 				process.waitFor();
+
+				process = new ProcessBuilder("resources/id3tool.exe", "-c", i + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
+				process.waitFor();
+				process = new ProcessBuilder("resources/id3tool.exe", "-a", meta.title, "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + song.title + ".mp3").start();
+				process.waitFor();
+				process = new ProcessBuilder("resources/id3tool.exe", "-t", song.title + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
+				process.waitFor();
+				i++;
 			}
 
 		} catch (Exception e) {

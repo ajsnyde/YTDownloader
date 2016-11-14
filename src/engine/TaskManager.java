@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaskManager implements Runnable, ThreadTracker {
 	Vector<Task> tasks = new Vector<Task>();
-	public static AtomicInteger MAX_THREADS = new AtomicInteger(20);
+	public static AtomicInteger MAX_THREADS = new AtomicInteger(200);
 	private static AtomicInteger CUR_THREADS = new AtomicInteger(0);
 	private static TaskManager instance = null;
 
