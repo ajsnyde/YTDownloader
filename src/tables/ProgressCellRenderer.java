@@ -9,29 +9,28 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class ProgressCellRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private double progress = 0;
+  private double progress = 0;
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		progress = (double) value;
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    progress = (double) value;
 
-		setText(String.format("%.1f%%", progress));
-		setHorizontalAlignment(CENTER);
+    setText(String.format("%.1f%%", progress));
+    setHorizontalAlignment(CENTER);
 
-		return this;
-	}
+    return this;
+  }
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		int progressWidth = (int) ((progress / 100) * getWidth());
+  @Override
+  protected void paintComponent(Graphics g) {
+    int progressWidth = (int) ((progress / 100) * getWidth());
 
-		g.setColor(Color.GREEN);
-		g.fillRect(0, 0, progressWidth, getHeight());
+    g.setColor(Color.GREEN);
+    g.fillRect(0, 0, progressWidth, getHeight());
 
-		super.paintComponent(g);
-	}
+    super.paintComponent(g);
+  }
 
 }

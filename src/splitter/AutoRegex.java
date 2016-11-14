@@ -38,251 +38,250 @@ import java.util.regex.Pattern;
 
 public class AutoRegex {
 
-	public int numPasses = 4;
+  public int numPasses = 4;
 
-	public Album getAlbum(String description, int length) {
+  public Album getAlbum(String description, int length) {
 
-		description = preprocess(description);
+    description = preprocess(description);
 
-		System.out.println(description);
-		Album album;
-		if (isDoubleTimestamped(description))
-			album = DoubleTimestampMethod(description);
-		else if (isSingleTimestamped(description))
-			album = SingleTimestampMethod(description, length);
-		else
-			return new Album();
-		album.length = length;
-		return album;
-	}
+    System.out.println(description);
+    Album album;
+    if (isDoubleTimestamped(description))
+      album = DoubleTimestampMethod(description);
+    else if (isSingleTimestamped(description))
+      album = SingleTimestampMethod(description, length);
+    else
+      return new Album();
+    album.length = length;
+    return album;
+  }
 
-	private Album SingleTimestampMethod(String description, int length) {
-		Album album = new Album();
+  private Album SingleTimestampMethod(String description, int length) {
+    Album album = new Album();
 
-		int lineNum = 0;
-		Song lastSong = new Song();
-		for (String line : description.split("\n")) {
-			Song song = new Song();
-			lineNum++;
-			String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
-			Pattern r = Pattern.compile(pattern);
-			Matcher m = r.matcher(line);
+    int lineNum = 0;
+    Song lastSong = new Song();
+    for (String line : description.split("\n")) {
+      Song song = new Song();
+      lineNum++;
+      String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
+      Pattern r = Pattern.compile(pattern);
+      Matcher m = r.matcher(line);
 
-			// set start and end times to song
-			m.find();
-			song.start = RegexHelper.parseSeconds(m.group(1));
-			song.number = lineNum;
+      // set start and end times to song
+      m.find();
+      song.start = RegexHelper.parseSeconds(m.group(1));
+      song.number = lineNum;
 
-			if (lineNum > 1) {
-				lastSong.end = RegexHelper.parseSeconds(m.group(1));
-				album.songs.add(lastSong);
-			}
-			lastSong = song;
-		}
-		lastSong.end = length;
-		album.songs.add(lastSong);
+      if (lineNum > 1) {
+        lastSong.end = RegexHelper.parseSeconds(m.group(1));
+        album.songs.add(lastSong);
+      }
+      lastSong = song;
+    }
+    lastSong.end = length;
+    album.songs.add(lastSong);
 
-		// description2 will be description stripped of timestamps
-		String description2 = "";
-		for (String line : description.split("\n")) {
-			description2 += removeTimestamps(line) + "\n";
-		}
+    // description2 will be description stripped of timestamps
+    String description2 = "";
+    for (String line : description.split("\n")) {
+      description2 += removeTimestamps(line) + "\n";
+    }
 
-		// for (Song song : album.songs)
-		// System.out.println(song.title + " " + song.number + " " + song.start + "-" + song.end);
+    // for (Song song : album.songs)
+    // System.out.println(song.title + " " + song.number + " " + song.start + "-" + song.end);
 
-		description2 = removeCommonalities(description2);
+    description2 = removeCommonalities(description2);
 
-		String[] lines = description2.split("\n");
-		for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
-			album.songs.get(i).title = lines[i];
-		}
-		return album;
-	}
+    String[] lines = description2.split("\n");
+    for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
+      album.songs.get(i).title = lines[i];
+    }
+    return album;
+  }
 
-	private Album DoubleTimestampMethod(String description) {
-		Album album = new Album();
+  private Album DoubleTimestampMethod(String description) {
+    Album album = new Album();
 
-		int lineNum = 0;
-		String description2 = "";
-		for (String line : description.split("\n")) {
-			Song song = new Song();
-			try {
-				String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
-				Pattern r = Pattern.compile(pattern);
-				Matcher m = r.matcher(line);
+    int lineNum = 0;
+    String description2 = "";
+    for (String line : description.split("\n")) {
+      Song song = new Song();
+      try {
+        String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(line);
 
-				// set start and end times to song
-				m.find();
-				song.start = RegexHelper.parseSeconds(m.group(1));
-				m.find();
-				song.end = RegexHelper.parseSeconds(m.group(1));
+        // set start and end times to song
+        m.find();
+        song.start = RegexHelper.parseSeconds(m.group(1));
+        m.find();
+        song.end = RegexHelper.parseSeconds(m.group(1));
 
-				line = removeTimestamps(line);
-				// System.out.println(line);
-				song.number = lineNum++;
-				description2 += line + "\n";
-				// System.out.println(line + " " + lineNum + " " + song.start + "-" + song.end);
+        line = removeTimestamps(line);
+        // System.out.println(line);
+        song.number = lineNum++;
+        description2 += line + "\n";
+        // System.out.println(line + " " + lineNum + " " + song.start + "-" + song.end);
 
-				album.songs.add(song);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		description2 = removeCommonalities(description2);
+        album.songs.add(song);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    description2 = removeCommonalities(description2);
 
-		String[] lines = description2.split("\n");
-		for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
-			album.songs.get(i).title = lines[i];
-		}
+    String[] lines = description2.split("\n");
+    for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
+      album.songs.get(i).title = lines[i];
+    }
 
-		return album;
-	}
+    return album;
+  }
 
-	// Finds and deletes timestamps, returning the resulting left or right side, whichever is larger
-	private String removeTimestamps(String line) {
+  // Finds and deletes timestamps, returning the resulting left or right side, whichever is larger
+  private String removeTimestamps(String line) {
 
-		// take larger portion of line minus the timestamps
-		line = line.replaceFirst("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)",
-				"TIMESTAMP");
-		int index = line.indexOf("TIMESTAMP");
-		int lengthleft = index;
-		int lengthright = line.length() - index - "TIMESTAMP".length();
+    // take larger portion of line minus the timestamps
+    line = line.replaceFirst("(\\s*+([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)\\s*+(.*[\\d]{0,2}:?[\\d]{1,3}:\\d\\d)?+)", "TIMESTAMP");
+    int index = line.indexOf("TIMESTAMP");
+    int lengthleft = index;
+    int lengthright = line.length() - index - "TIMESTAMP".length();
 
-		// System.out.println(lengthleft);
-		// System.out.println(lengthright);
-		line = lengthleft > lengthright ? line.substring(0, index) : line.substring(index + "TIMESTAMP".length());
+    // System.out.println(lengthleft);
+    // System.out.println(lengthright);
+    line = lengthleft > lengthright ? line.substring(0, index) : line.substring(index + "TIMESTAMP".length());
 
-		return line;
-	}
+    return line;
+  }
 
-	// removes left and right commonalities over a number of passes
-	private String removeCommonalities(String in) {
-		for (int i = 0; i < numPasses; ++i) {
-			in = removeLeftCommonalities(in);
-			in = removeRightCommonalities(in);
-			in = trimLines(in);
-		}
-		System.out.println(in);
-		return in;
-	}
+  // removes left and right commonalities over a number of passes
+  private String removeCommonalities(String in) {
+    for (int i = 0; i < numPasses; ++i) {
+      in = removeLeftCommonalities(in);
+      in = removeRightCommonalities(in);
+      in = trimLines(in);
+    }
+    System.out.println(in);
+    return in;
+  }
 
-	private String trimLines(String in) {
-		String out = "";
-		for (String line : in.split("\n"))
-			out += line.trim() + "\n";
-		return out;
-	}
+  private String trimLines(String in) {
+    String out = "";
+    for (String line : in.split("\n"))
+      out += line.trim() + "\n";
+    return out;
+  }
 
-	// reverses the string, revmoves left commounalities, reverses again and returns
-	private String removeRightCommonalities(String in) {
-		String reverse = "";
-		for (String line : in.split("\n")) {
-			reverse += new StringBuilder(line).reverse() + "\n";
-		}
-		reverse = removeLeftCommonalities(reverse);
-		String output = "";
-		for (String line : in.split("\n")) {
-			output += new StringBuilder(line).reverse() + "\n";
-		}
-		return output;
-	}
+  // reverses the string, revmoves left commounalities, reverses again and returns
+  private String removeRightCommonalities(String in) {
+    String reverse = "";
+    for (String line : in.split("\n")) {
+      reverse += new StringBuilder(line).reverse() + "\n";
+    }
+    reverse = removeLeftCommonalities(reverse);
+    String output = "";
+    for (String line : in.split("\n")) {
+      output += new StringBuilder(line).reverse() + "\n";
+    }
+    return output;
+  }
 
-	private String removeLeftCommonalities(String in) {
+  private String removeLeftCommonalities(String in) {
 
-		String[] lines = in.split("\n");
+    String[] lines = in.split("\n");
 
-		ArrayList<Character> common = new ArrayList<Character>();
-		ArrayList<Boolean> same = new ArrayList<Boolean>();
+    ArrayList<Character> common = new ArrayList<Character>();
+    ArrayList<Boolean> same = new ArrayList<Boolean>();
 
-		// get minimum length, will act as condition for looking for
-		// commonalities;
-		int minLength = Integer.MAX_VALUE;
-		for (String line : lines) {
-			minLength = Integer.min(minLength, line.length());
-			// System.out.println(line);
-		}
+    // get minimum length, will act as condition for looking for
+    // commonalities;
+    int minLength = Integer.MAX_VALUE;
+    for (String line : lines) {
+      minLength = Integer.min(minLength, line.length());
+      // System.out.println(line);
+    }
 
-		String regex = "(";
+    String regex = "(";
 
-		// start from one side, go to other until common strings end
-		for (int i = 0; i < minLength; ++i) {
-			char compare = '\f'; // placeholder, since chars can't be null;
-			boolean linesCommon = true;
+    // start from one side, go to other until common strings end
+    for (int i = 0; i < minLength; ++i) {
+      char compare = '\f'; // placeholder, since chars can't be null;
+      boolean linesCommon = true;
 
-			for (int j = 0; j < lines.length - 1; ++j) {
-				if (compare == '\f')
-					compare = lines[j].charAt(i);
-				else if (Character.isDigit(compare) && Character.isDigit(lines[j].charAt(i))) {
-				} else if (Character.isWhitespace(compare) && Character.isWhitespace(lines[j].charAt(i))) {
-				} else if (compare != lines[j].charAt(i)) {
-					linesCommon = false;
-					break;
-				}
-				// System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
-			}
+      for (int j = 0; j < lines.length - 1; ++j) {
+        if (compare == '\f')
+          compare = lines[j].charAt(i);
+        else if (Character.isDigit(compare) && Character.isDigit(lines[j].charAt(i))) {
+        } else if (Character.isWhitespace(compare) && Character.isWhitespace(lines[j].charAt(i))) {
+        } else if (compare != lines[j].charAt(i)) {
+          linesCommon = false;
+          break;
+        }
+        // System.out.println(linesCommon + "-" + compare + "=" + lines[j].charAt(i) + "?");
+      }
 
-			if (linesCommon && Character.isDigit(compare)) {
-				regex += "\\d+";
-			} else if (linesCommon && Character.isWhitespace(compare))
-				regex += "\\s+";
-			else if (linesCommon) {
-				if (compare == '(' || compare == ')' || compare == '.' || compare == '[' || compare == ']')
-					regex += "\\";
-				regex += compare;
-			}
-		}
-		regex += ")";
-		System.out.println(regex);
-		String output = "";
-		for (String line : lines) {
-			output += line.replaceFirst(regex, "") + "\n";
-		}
-		output = output.substring(0, output.length() - 1);
+      if (linesCommon && Character.isDigit(compare)) {
+        regex += "\\d+";
+      } else if (linesCommon && Character.isWhitespace(compare))
+        regex += "\\s+";
+      else if (linesCommon) {
+        if (compare == '(' || compare == ')' || compare == '.' || compare == '[' || compare == ']')
+          regex += "\\";
+        regex += compare;
+      }
+    }
+    regex += ")";
+    System.out.println(regex);
+    String output = "";
+    for (String line : lines) {
+      output += line.replaceFirst(regex, "") + "\n";
+    }
+    output = output.substring(0, output.length() - 1);
 
-		return output;
-	}
+    return output;
+  }
 
-	// returns true if all lines have 2 timestamps
-	private boolean isDoubleTimestamped(String description) {
+  // returns true if all lines have 2 timestamps
+  private boolean isDoubleTimestamped(String description) {
 
-		for (String line : description.split("\n"))
-			if (!(containsTimestamps(line) == 2)) {
-				return false;
-			}
-		return true;
-	}
+    for (String line : description.split("\n"))
+      if (!(containsTimestamps(line) == 2)) {
+        return false;
+      }
+    return true;
+  }
 
-	private boolean isSingleTimestamped(String description) {
+  private boolean isSingleTimestamped(String description) {
 
-		for (String line : description.split("\n"))
-			if (!(containsTimestamps(line) == 1)) {
-				return false;
-			}
-		return true;
-	}
+    for (String line : description.split("\n"))
+      if (!(containsTimestamps(line) == 1)) {
+        return false;
+      }
+    return true;
+  }
 
-	private String preprocess(String description) {
-		String pre = "";
-		for (String line : description.split("\n"))
-			if (containsTimestamps(line) > 0)
-				pre += line.trim() + "\n";
-		return pre.substring(0, pre.length() - 1); // gets rid of extra newline
-	}
+  private String preprocess(String description) {
+    String pre = "";
+    for (String line : description.split("\n"))
+      if (containsTimestamps(line) > 0)
+        pre += line.trim() + "\n";
+    return pre.substring(0, pre.length() - 1); // gets rid of extra newline
+  }
 
-	private int containsTimestamps(String line) {
-		int numTimestamps = 0;
+  private int containsTimestamps(String line) {
+    int numTimestamps = 0;
 
-		try {
-			String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
-			Pattern r = Pattern.compile(pattern);
-			Matcher m = r.matcher(line);
+    try {
+      String pattern = "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)";
+      Pattern r = Pattern.compile(pattern);
+      Matcher m = r.matcher(line);
 
-			while (m.find())
-				numTimestamps++;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return numTimestamps;
-	}
+      while (m.find())
+        numTimestamps++;
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    return numTimestamps;
+  }
 }
