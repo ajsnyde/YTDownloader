@@ -45,13 +45,15 @@ public class AutoRegex {
 		description = preprocess(description);
 
 		System.out.println(description);
-
+		Album album;
 		if (isDoubleTimestamped(description))
-			return DoubleTimestampMethod(description);
+			album = DoubleTimestampMethod(description);
 		else if (isSingleTimestamped(description))
-			return SingleTimestampMethod(description, length);
+			album = SingleTimestampMethod(description, length);
 		else
 			return new Album();
+		album.length = length;
+		return album;
 	}
 
 	private Album SingleTimestampMethod(String description, int length) {
@@ -91,6 +93,10 @@ public class AutoRegex {
 
 		description2 = removeCommonalities(description2);
 
+		String[] lines = description2.split("\n");
+		for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
+			album.songs.get(i).title = lines[i];
+		}
 		return album;
 	}
 

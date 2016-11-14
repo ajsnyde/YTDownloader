@@ -7,11 +7,15 @@ import java.util.regex.Pattern;
 
 import tables.DownloadTableModel;
 
-//should accept ONE url with parameters for downloading (meta, video, etc.)
+//should accept ONE url video to download from
+//adds video file location
 public class TaskDownloadVideo extends Task {
 
 	final Pattern downloadStats = Pattern.compile(
 			"(\\d+\\.?\\d+)% of (\\d+\\.\\d+[MK]iB)\\s+at\\s+(\\d+\\.\\d+[MK]iB\\/s)\\s+ETA\\s+(\\d+:\\d+:?\\d*)");
+
+	final Pattern quotation = Pattern.compile("\"([^\"]+)\"");
+
 	final Pattern progressNumber = Pattern.compile("(\\d+) of (\\d+)");
 
 	public TaskDownloadVideo(HashMap<String, Object> parameters) {
@@ -24,7 +28,13 @@ public class TaskDownloadVideo extends Task {
 	public void run() {
 		increaseParent();
 		try {
-			Execute execute = new Execute(parameters);
+			HashMap<String, Object> downloadParameters = new HashMap<String, Object>();
+			downloadParameters.put("ExeLocation", "resources/youtube-dl.exe");
+			downloadParameters.put("ExeArguments",
+					"-x --audio-format mp3 -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
+							+ parameters.get("url"));
+
+			Execute execute = new Execute(downloadParameters);
 			Thread thread = new Thread(execute, "test");
 			thread.start();
 			synchronized (execute) {
@@ -74,8 +84,10 @@ public class TaskDownloadVideo extends Task {
 				e.printStackTrace();
 			}
 		}
-		if (line.contains("[info] Writing video description metadata as JSON to: ")) {
-			parameters.put("metaDataFile", new File(line.substring(54)));
+
+		if (line.contains("[ffmpeg] Destination: ")) {
+			System.out.println("placing file in audioLocation: " + line.substring(22));
+			parameters.put("audioLocation", new File(line.substring(22)));
 		}
 	}
 }

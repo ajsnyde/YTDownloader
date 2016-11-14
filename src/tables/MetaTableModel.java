@@ -13,7 +13,6 @@ public class MetaTableModel extends AbstractTableModel {
 
 	private static final int COL_NAME = 0;
 	private static final int COL_URL = 1;
-	private static final int COL_SIZE = 2;
 
 	private static String[] headers = new String[] { "Name", "Url", "Size" };
 
@@ -44,11 +43,9 @@ public class MetaTableModel extends AbstractTableModel {
 
 		switch (columnIndex) {
 		case COL_NAME:
-			return meta.name;
+			return meta.title;
 		case COL_URL:
 			return meta.url;
-		case COL_SIZE:
-			return meta.size;
 		default:
 			throw new IllegalArgumentException(String.format("Column %d is outside of the column range", columnIndex));
 		}

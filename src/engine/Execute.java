@@ -18,8 +18,7 @@ public class Execute implements Runnable {
 		System.out.println("Running Executable");
 		try {
 			synchronized (this) {
-				p = Runtime.getRuntime()
-						.exec(parameters.get("downloadExeLocation") + " " + parameters.get("downloadExeArguments"));
+				p = Runtime.getRuntime().exec(parameters.get("ExeLocation") + " " + parameters.get("ExeArguments"));
 				InputStreamReader re = new InputStreamReader(p.getInputStream());
 				input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				notify();

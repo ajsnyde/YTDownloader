@@ -248,8 +248,8 @@ public class AddTask extends JFrame {
 
 		if (urls.length == 1) {
 			HashMap<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
-			parameters.put("downloadExeArguments",
+			parameters.put("ExeLocation", "resources/youtube-dl.exe");
+			parameters.put("ExeArguments",
 					"--write-info-json --skip-download -o \"Downloads/metadata/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
 							+ urls[0]);
 			parameters.put("progressBar", progressBar);
@@ -261,8 +261,8 @@ public class AddTask extends JFrame {
 
 			for (String url : urls) {
 				HashMap<String, Object> parameters = new HashMap<String, Object>();
-				parameters.put("downloadExeLocation", "resources/youtube-dl.exe");
-				parameters.put("downloadExeArguments",
+				parameters.put("ExeLocation", "resources/youtube-dl.exe");
+				parameters.put("ExeArguments",
 						"--write-info-json --skip-download -o \"Downloads/metadata/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" "
 								+ url);
 				tasks.add(new TaskDownloadVideo(parameters));

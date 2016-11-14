@@ -9,16 +9,24 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+// This class pertains to ONE video/mp3/album/metadata file
+
 public class Metadata {
 
 	public String url;
-	public String name;
-	public String size;
-	public File file;
+	public String uploader;
+	public String title;
+	public String description;
+	public int length;
+	public File metaDataFile;
 
 	public Metadata(File file) {
-		this.file = file;
-		// TODO: create more variables and read file to set them
+		this.metaDataFile = file;
+		uploader = getMetaElement("uploader");
+		title = getMetaElement("title");
+		length = Integer.parseInt(getMetaElement("duration"));
+		description = getMetaElement("description");
+		url = getMetaElement("webpage_url");
 	}
 
 	public String getMetaElement(String element) {
@@ -26,8 +34,8 @@ public class Metadata {
 		ArrayList<String> out = new ArrayList<String>();
 		try {
 			JSONObject jsonObject;
-			if (file.exists())
-				return ((JSONObject) parser.parse(readFile(file))).get(element).toString();
+			if (metaDataFile.exists())
+				return ((JSONObject) parser.parse(readFile(metaDataFile))).get(element).toString();
 			else
 				return null;
 		} catch (Exception e) {
@@ -52,5 +60,4 @@ public class Metadata {
 			reader.close();
 		}
 	}
-
 }
