@@ -3,6 +3,8 @@ package engine;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import logger.FileLogger;
+
 public class TaskManager implements Runnable, ThreadTracker {
   Vector<Task> tasks = new Vector<Task>();
   public static AtomicInteger MAX_THREADS = new AtomicInteger(200);
@@ -38,7 +40,7 @@ public class TaskManager implements Runnable, ThreadTracker {
   private void maintainThreadCount() {
     while (canIncrease() && tasks.size() > 0) {
       new Thread(tasks.remove(0)).start();
-      System.out.println(CUR_THREADS.get());
+      FileLogger.logger().info("Threadcount at " + getThreadCount() + " out of " + MAX_THREADS.get());
     }
   }
 

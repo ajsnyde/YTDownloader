@@ -29,7 +29,7 @@ public class TaskDownloadMeta extends Task {
 
       HashMap<String, Object> metaParameters = new HashMap<String, Object>();
       metaParameters.put("ExeLocation", "resources/youtube-dl.exe");
-      metaParameters.put("ExeArguments", "--write-info-json --skip-download -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
+      metaParameters.put("ExeArguments", "--write-info-json --skip-download -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
 
       Execute execute = new Execute(metaParameters);
       Thread thread = new Thread(execute, "test");

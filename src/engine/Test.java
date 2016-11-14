@@ -10,7 +10,7 @@ public class Test {
     System.out.println("Starting setup at " + Instant.now());
     // grab all Metadatas from a url
     HashMap<String, Object> metaParameters = new HashMap<String, Object>();
-    metaParameters.put("url", "https://www.youtube.com/watch?v=rp6hJQMF18I");// "https://www.youtube.com/user/CosmicSoundwaves");
+    metaParameters.put("url", "https://www.youtube.com/watch?v=pcGHKzhmPvk");
 
     Vector<Task> tasktasks = new Vector<Task>();
 
