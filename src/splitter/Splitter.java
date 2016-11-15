@@ -1,9 +1,11 @@
 package splitter;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import logger.FileLogger;
 import youtube_dl.Engine;
 
 public class Splitter {
@@ -33,7 +35,7 @@ public class Splitter {
   void download(String url) {
     if (!new File("Downloads/" + Engine.getMetaElement(url, "title") + "/" + Engine.getMetaElement(url, "title") + ".mp3").exists())
       Engine.exeWait(url, "-oDownloads/%(title)s/%(title)s.%(ext)s", "-x", "--audio-format", "mp3");
-    System.out.println("Done downloading mp3");
+    FileLogger.logger().log(Level.FINEST, "Done downloading mp3");
     description = Engine.getMetaElement(url, "description");
     duration = Integer.parseInt(Engine.getMetaElement(url, "duration"));
     albumTitle = Engine.getMetaElement(url, "title");
@@ -60,8 +62,8 @@ public class Splitter {
   void split(String url, String title, int tracknum, int timeStart, int timeEnd) {
     Process process;
     try {
-      System.out
-          .println(exeLocation.toString() + " Downloads/" + albumTitle + "/" + albumTitle + ".mp3" + " Downloads/" + albumTitle + "/" + title + ".mp3" + " trim " + timeStart + " " + timeEnd + "");
+      FileLogger.logger().log(Level.FINEST,
+          exeLocation.toString() + " Downloads/" + albumTitle + "/" + albumTitle + ".mp3" + " Downloads/" + albumTitle + "/" + title + ".mp3" + " trim " + timeStart + " " + timeEnd + "");
 
       process = new ProcessBuilder(exeLocation.toString(), "Downloads/" + albumTitle + "/" + albumTitle + ".mp3", "Downloads/" + albumTitle + "/" + title + ".mp3", "trim", timeStart + "",
           timeEnd + "").start();

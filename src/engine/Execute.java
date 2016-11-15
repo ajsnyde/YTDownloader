@@ -3,6 +3,9 @@ package engine;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.logging.Level;
+
+import logger.FileLogger;
 
 public class Execute implements Runnable {
   HashMap<String, Object> parameters;
@@ -15,7 +18,7 @@ public class Execute implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("Running Executable");
+    FileLogger.logger().log(Level.FINEST, "Running Executable");
     try {
       synchronized (this) {
         p = Runtime.getRuntime().exec(parameters.get("ExeLocation") + " " + parameters.get("ExeArguments"));

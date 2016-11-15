@@ -2,9 +2,11 @@ package engine;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import logger.FileLogger;
 import tables.DownloadTableModel;
 
 //should accept ONE url video to download from
@@ -47,7 +49,7 @@ public class TaskDownloadVideo extends Task {
         String line;
         while ((line = execute.input.readLine()) != null) {
           parseLine(line);
-          System.out.println(line);
+          FileLogger.logger().log(Level.FINEST, line);
         }
 
       } else {
@@ -91,7 +93,7 @@ public class TaskDownloadVideo extends Task {
     }
 
     if (line.contains("[ffmpeg] Destination: ")) {
-      System.out.println("placing file in audioLocation: " + line.substring(22));
+      FileLogger.logger().log(Level.FINEST, "placing file in audioLocation: " + line.substring(22));
       parameters.put("audioLocation", new File(line.substring(22)));
     }
   }

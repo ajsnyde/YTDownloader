@@ -1,8 +1,12 @@
 package splitter;
 
+import java.util.logging.Level;
+
+import logger.FileLogger;
+
 public class RegexHelper {
   static String regexProcess(String pre) {
-    System.out.println("Converting " + pre);
+    FileLogger.logger().log(Level.FINEST, "Converting " + pre);
 
     pre = pre.replace("num", "(?:[\\d]+)");
     pre = pre.replace(" ", "\\s+");

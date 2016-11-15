@@ -3,8 +3,11 @@ package engine;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import logger.FileLogger;
 
 //should accept ONE url and add a number of Metadatas to parameters
 public class TaskDownloadMeta extends Task {
@@ -44,14 +47,14 @@ public class TaskDownloadMeta extends Task {
       String line;
       while ((line = execute.input.readLine()) != null) {
         parseLine(line);
-        System.out.println(line);
+        FileLogger.logger().log(Level.FINEST, line);
       }
 
       // After grabbing metadata files, process into Metadata objects and add to parameters
       // TODO: add progress increase
       for (File metaFile : (Vector<File>) parameters.get("metaDataFiles")) {
         ((Vector<Metadata>) (parameters.get("metaDatas"))).addElement(new Metadata(metaFile));
-        System.out.println("Creating new Metadata: " + metaFile);
+        FileLogger.logger().log(Level.FINEST, "Creating new Metadata: " + metaFile);
       }
 
       updateProgress(100);
@@ -77,7 +80,7 @@ public class TaskDownloadMeta extends Task {
     }
     if (line.contains("[info] Writing video description metadata as JSON to: ")) {
       ((Vector<File>) (parameters.get("metaDataFiles"))).add(new File(line.substring(54)));
-      System.out.println("New metadata file detected");
+      FileLogger.logger().log(Level.FINEST, "New metadata file detected");
     }
   }
 }

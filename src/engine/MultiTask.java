@@ -3,6 +3,9 @@ package engine;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+
+import logger.FileLogger;
 
 public class MultiTask extends TaskTask implements ThreadTracker {
 
@@ -37,7 +40,7 @@ public class MultiTask extends TaskTask implements ThreadTracker {
     while (TaskManager.getInstance().canIncrease() && canIncrease() && tasks.size() > 0) {
       tasks.get(0).parameters.put("parent", this);
       new Thread(tasks.remove(0)).start();
-      System.out.println(CUR_THREADS.get());
+      FileLogger.logger().log(Level.FINEST, CUR_THREADS.get() + "");
     }
   }
 

@@ -1,8 +1,11 @@
 package splitter;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import logger.FileLogger;
 
 /*
  * DOCUMENTATION:
@@ -44,7 +47,7 @@ public class AutoRegex {
 
     description = preprocess(description);
 
-    System.out.println(description);
+    FileLogger.logger().log(Level.FINEST, description);
     Album album;
     if (isDoubleTimestamped(description))
       album = DoubleTimestampMethod(description);
@@ -162,7 +165,7 @@ public class AutoRegex {
       in = removeRightCommonalities(in);
       in = trimLines(in);
     }
-    System.out.println(in);
+    FileLogger.logger().log(Level.FINEST, in);
     return in;
   }
 
@@ -232,7 +235,7 @@ public class AutoRegex {
       }
     }
     regex += ")";
-    System.out.println(regex);
+    FileLogger.logger().log(Level.FINEST, regex);
     String output = "";
     for (String line : lines) {
       output += line.replaceFirst(regex, "") + "\n";
@@ -266,7 +269,10 @@ public class AutoRegex {
     for (String line : description.split("\n"))
       if (containsTimestamps(line) > 0)
         pre += line.trim() + "\n";
-    return pre.substring(0, pre.length() - 1); // gets rid of extra newline
+    if (pre.length() != 0)
+      return pre.substring(0, pre.length() - 1); // gets rid of extra newline
+    else
+      return pre;
   }
 
   private int containsTimestamps(String line) {
@@ -280,7 +286,7 @@ public class AutoRegex {
       while (m.find())
         numTimestamps++;
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      FileLogger.logger().log(Level.WARNING, "Failure when trying to locate a timestamp in a line of text");
     }
     return numTimestamps;
   }

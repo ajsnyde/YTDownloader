@@ -3,8 +3,11 @@ package engine;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import logger.FileLogger;
 
 //should accept ONE url with parameters for downloading (meta, video, etc.)
 public class TaskDownloadMetaPlaylist extends Task {
@@ -32,7 +35,7 @@ public class TaskDownloadMetaPlaylist extends Task {
       String line;
       while ((line = execute.input.readLine()) != null) {
         parseLine(line);
-        System.out.println(line);
+        FileLogger.logger().log(Level.FINEST, line);
       }
       updateProgress(100);
     } catch (Exception e) {

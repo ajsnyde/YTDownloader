@@ -2,6 +2,7 @@ package engine;
 
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import logger.FileLogger;
 
@@ -40,7 +41,7 @@ public class TaskManager implements Runnable, ThreadTracker {
   private void maintainThreadCount() {
     while (canIncrease() && tasks.size() > 0) {
       new Thread(tasks.remove(0)).start();
-      FileLogger.logger().info("Threadcount at " + getThreadCount() + " out of " + MAX_THREADS.get());
+      FileLogger.logger().log(Level.FINEST, "Threadcount at " + getThreadCount() + " out of " + MAX_THREADS.get());
     }
   }
 
