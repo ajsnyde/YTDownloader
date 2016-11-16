@@ -56,7 +56,9 @@ public class TaskDownloadMeta extends Task {
         ((Vector<Metadata>) (parameters.get("metaDatas"))).addElement(new Metadata(metaFile));
         FileLogger.logger().log(Level.FINEST, "Creating new Metadata: " + metaFile);
       }
-
+      // if only a single metadata file is created, assume that this is a one-video job:
+      if (((Vector<File>) parameters.get("metaDataFiles")).size() == 1)
+        parameters.put("metadata", new Metadata(((Vector<File>) parameters.get("metaDataFiles")).get(0)));
       updateProgress(100);
     } catch (Exception e) {
       e.printStackTrace();

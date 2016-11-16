@@ -13,7 +13,7 @@ import javax.swing.border.TitledBorder;
 
 import engine.Metadata;
 import engine.Task;
-import engine.TaskDownloadMetaPlaylist;
+import engine.TaskDownloadMeta;
 import engine.TaskDownloadVideo;
 import engine.TaskManager;
 import engine.TaskTask;
@@ -249,7 +249,7 @@ public class AddTask extends JFrame {
       parameters.put("ExeLocation", "resources/youtube-dl.exe");
       parameters.put("ExeArguments", "--write-info-json --skip-download -o \"Downloads/metadata/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + urls[0]);
       parameters.put("progressBar", progressBar);
-      TaskManager.getInstance().addTask(new TaskDownloadMetaPlaylist(parameters));
+      TaskManager.getInstance().addTask(new TaskDownloadMeta(parameters));
 
     } else {
 

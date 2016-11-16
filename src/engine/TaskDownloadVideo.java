@@ -29,6 +29,7 @@ public class TaskDownloadVideo extends Task {
   public void run() {
     increaseParent();
     try {
+      // Check for existing mp3 using metadata file
       if (parameters.get("metadata") == null || !new File(
           "Downloads\\" + ((Metadata) parameters.get("metadata")).uploader + "\\" + ((Metadata) parameters.get("metadata")).uploader + " - " + ((Metadata) parameters.get("metadata")).title + ".mp3")
               .exists()) {
