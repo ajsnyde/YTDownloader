@@ -12,11 +12,9 @@ import java.awt.Insets;
 import javax.swing.border.TitledBorder;
 
 import engine.Metadata;
-import engine.Task;
-import engine.TaskDownloadMeta;
-import engine.TaskDownloadVideo;
+import engine.TaskBuilder;
+import engine.TaskBuilder.TASK;
 import engine.TaskManager;
-import engine.TaskTask;
 import tables.MetaTableModel;
 import tables.ProgressCellRenderer;
 
@@ -32,8 +30,6 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.DefaultComboBoxModel;
@@ -244,28 +240,9 @@ public class AddTask extends JFrame {
 
   void grabMeta(String[] urls) {
 
-    if (urls.length == 1) {
-      HashMap<String, Object> parameters = new HashMap<String, Object>();
-      parameters.put("ExeLocation", "resources/youtube-dl.exe");
-      parameters.put("ExeArguments", "--write-info-json --skip-download -o \"Downloads/metadata/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + urls[0]);
-      parameters.put("progressBar", progressBar);
-      TaskManager.getInstance().addTask(new TaskDownloadMeta(parameters));
-
-    } else {
-
-      Vector<Task> tasks = new Vector<Task>();
-
-      for (String url : urls) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("ExeLocation", "resources/youtube-dl.exe");
-        parameters.put("ExeArguments", "--write-info-json --skip-download -o \"Downloads/metadata/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + url);
-        tasks.add(new TaskDownloadVideo(parameters));
-      }
-      HashMap<String, Object> parameters = new HashMap<String, Object>();
-      parameters.put("tasks", tasks);
-      parameters.put("progressBar", progressBar);
-      TaskManager.getInstance().addTask(new TaskTask(parameters));
-    }
-
+    TaskBuilder builder = new TaskBuilder().createMultiTask().put("maxThreads", 25).put("progressBar", progressBar);
+    for (String url : urls)
+      builder.addTask(TASK.TASKDOWNLOADMETA, true).put("url", url);
+    TaskManager.getInstance().addTask(builder.build());
   }
 }

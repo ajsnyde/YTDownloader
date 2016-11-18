@@ -13,6 +13,8 @@ public class MultiTask extends TaskTask implements ThreadTracker {
   public AtomicInteger MAX_THREADS = new AtomicInteger(5);
   private AtomicInteger CUR_THREADS = new AtomicInteger(0);
   private int sleepTime = 50;
+  int taskCount;
+  int taskComplete = 0;
 
   public MultiTask(HashMap<String, Object> parameters) {
     super(parameters);
@@ -26,6 +28,7 @@ public class MultiTask extends TaskTask implements ThreadTracker {
   @Override
   public void run() {
     increaseParent();
+    taskCount = tasks.size();
     while (tasks.size() > 0) {
       try {
         maintainThreadCount();
@@ -46,6 +49,8 @@ public class MultiTask extends TaskTask implements ThreadTracker {
 
   public void decreaseThreadCount() {
     CUR_THREADS.decrementAndGet();
+    taskComplete++;
+    updateProgress((int) (100.0 * taskComplete / taskCount));
   }
 
   public void increaseThreadCount() {
