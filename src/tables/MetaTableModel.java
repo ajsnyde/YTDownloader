@@ -3,6 +3,7 @@ package tables;
 
 import java.io.File;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 import engine.Metadata;
@@ -13,8 +14,10 @@ public class MetaTableModel extends AbstractTableModel {
 
   private static final int COL_NAME = 0;
   private static final int COL_URL = 1;
+  private static final int COL_UPLOADER = 2;
+  private static final int COL_DESCRIPTION = 3;
 
-  private static String[] headers = new String[] { "Name", "Url", "Size" };
+  private static String[] headers = new String[] { "Title", "Url", "Uploader", "Description" };
 
   private List<Metadata> metas;
 
@@ -46,18 +49,22 @@ public class MetaTableModel extends AbstractTableModel {
       return meta.title;
     case COL_URL:
       return meta.url;
+    case COL_UPLOADER:
+      return meta.uploader;
+    case COL_DESCRIPTION:
+      return meta.description;
     default:
       throw new IllegalArgumentException(String.format("Column %d is outside of the column range", columnIndex));
     }
   }
 
   public void addMeta(File metaFile) {
-
     this.fireTableDataChanged();
   }
 
-  public void addMeta(File[] metaFiles) {
-
+  public void addMeta(List<File> metaFiles) {
+    for (File meta : metaFiles)
+      metas.add(new Metadata(meta));
     this.fireTableDataChanged();
   }
 

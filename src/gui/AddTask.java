@@ -12,12 +12,11 @@ import java.awt.Insets;
 import javax.swing.border.TitledBorder;
 
 import engine.Metadata;
+import engine.Task;
 import engine.TaskBuilder;
 import engine.TaskBuilder.TASK;
 import engine.TaskManager;
 import tables.MetaTableModel;
-import tables.ProgressCellRenderer;
-
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JComboBox;
@@ -30,6 +29,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.DefaultComboBoxModel;
@@ -65,7 +65,7 @@ public class AddTask extends JFrame {
     setTitle(urls[0]);
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setBounds(100, 100, 781, 348);
+    setBounds(100, 100, 781, 483);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -75,7 +75,7 @@ public class AddTask extends JFrame {
     contentPane.add(panel, BorderLayout.CENTER);
     GridBagLayout gbl_panel = new GridBagLayout();
     gbl_panel.columnWidths = new int[] { 30, 0, 0, 0 };
-    gbl_panel.rowHeights = new int[] { 0, 0, 38, 40, 10, 0 };
+    gbl_panel.rowHeights = new int[] { 0, 0, 52, 40, 10, 0 };
     gbl_panel.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
     gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
     panel.setLayout(gbl_panel);
@@ -121,7 +121,7 @@ public class AddTask extends JFrame {
     gbl_panel_2.columnWidths = new int[] { 16, 19, 0 };
     gbl_panel_2.rowHeights = new int[] { 0, 0, 0, 0 };
     gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-    gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 1.0, Double.MIN_VALUE };
+    gbl_panel_2.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
     panel_2.setLayout(gbl_panel_2);
 
     JButton btnNewButton = new JButton("\u25BC");
@@ -204,12 +204,11 @@ public class AddTask extends JFrame {
 
     ArrayList<Metadata> metas = new ArrayList<Metadata>();
     model = new MetaTableModel(metas);
-    JTable downloadTable = new JTable(model);
+    JTable table = new JTable(model);
 
-    downloadTable.setDefaultRenderer(Double.class, new ProgressCellRenderer());
-    downloadTable.setFillsViewportHeight(true);
+    table.setFillsViewportHeight(true);
 
-    JScrollPane scrollPane = new JScrollPane(downloadTable);
+    JScrollPane scrollPane = new JScrollPane(table);
     scrollPane.setVisible(false);
     GridBagConstraints gbc_scrollPane = new GridBagConstraints();
     gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -223,11 +222,13 @@ public class AddTask extends JFrame {
       public void actionPerformed(ActionEvent arg0) {
         if (btnNewButton.getText() == "\u25B2") {
           scrollPane.setVisible(false);
+          table.setVisible(false);
           btnNewButton.setText("\u25BC");
           gbl_panel.rowHeights[2] = 38;
-          setSize(800, 200);
+          setSize(800, 270);
         } else {
           scrollPane.setVisible(true);
+          table.setVisible(true);
           btnNewButton.setText("\u25B2");
           setSize(800, 600);
           gbl_panel.rowHeights[2] = 338;
@@ -239,10 +240,24 @@ public class AddTask extends JFrame {
   }
 
   void grabMeta(String[] urls) {
-
-    TaskBuilder builder = new TaskBuilder().createMultiTask().put("maxThreads", 25).put("progressBar", progressBar);
-    for (String url : urls)
+    TaskBuilder builder = new TaskBuilder().createMultiTask().put("maxThreads", 25);
+    for (String url : urls) {
       builder.addTask(TASK.TASKDOWNLOADMETA, true).put("url", url);
+      builder.getLastTask().onCompletion.addElement(new ActionListener() {
+        public void actionPerformed(ActionEvent arg0) {
+          model.addMeta((((Vector<File>) ((Task) arg0.getSource()).parameters.get("metaDataFiles"))));
+        }
+      });
+    }
+
+    builder.build().onUpdate.addElement(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        progressBar.setIndeterminate(false);
+        progressBar.setValue(((Task) arg0.getSource()).progress.intValue());
+      }
+    });
+
     TaskManager.getInstance().addTask(builder.build());
   }
+
 }

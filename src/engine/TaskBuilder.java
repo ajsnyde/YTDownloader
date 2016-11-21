@@ -81,6 +81,10 @@ public class TaskBuilder {
     return lastParameters.get(key);
   }
 
+  public Task getLastTask() {
+    return ((Vector<Task>) mainParameters.get("tasks")).lastElement();
+  }
+
   public Task build() {
     return mainTask;
   }
