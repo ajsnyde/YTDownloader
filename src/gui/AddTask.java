@@ -40,6 +40,7 @@ public class AddTask extends JFrame {
   private ArrayList<String> pastFiles = new ArrayList<String>();
   JProgressBar progressBar = new JProgressBar();
   private MetaTableModel model;
+  private Task metadataTask;
 
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -198,6 +199,8 @@ public class AddTask extends JFrame {
     JButton btnCancel = new JButton("Cancel");
     btnCancel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
+        metadataTask.kill();
+        dispose();
       }
     });
     panel_7.add(btnCancel);
@@ -258,6 +261,6 @@ public class AddTask extends JFrame {
     });
 
     TaskManager.getInstance().addTask(builder.build());
+    metadataTask = builder.build();
   }
-
 }

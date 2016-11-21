@@ -6,6 +6,9 @@ import tables.DownloadTableModel;
 
 //This essentially runs multiple Tasks in sequential order using a single thread.
 
+//TODO: rename to SequentialTask or TaskSequential (and TaskMulti)
+//TODO: add vector<Task> to ThreadTracker interface
+//TODO: track down and kill() every thread. Every. Last. One.
 public class TaskTask extends Task {
 
   public TaskTask(HashMap<String, Object> parameters) {

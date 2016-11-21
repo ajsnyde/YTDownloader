@@ -1,6 +1,7 @@
 package engine;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -28,5 +29,18 @@ public class Execute implements Runnable {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void kill() {
+    System.out.println("DESTROYING EXE");
+    p.destroyForcibly();
+    try {
+      input.close();
+      input = null;
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 }

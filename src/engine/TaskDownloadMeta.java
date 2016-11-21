@@ -1,6 +1,7 @@
 package engine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -13,6 +14,8 @@ import logger.FileLogger;
 public class TaskDownloadMeta extends Task {
 
   final Pattern progressNumber = Pattern.compile("(\\d+) of (\\d+)");
+  private Execute execute;
+  private Thread thread;
 
   public TaskDownloadMeta(HashMap<String, Object> parameters) {
     this.parameters = parameters;
@@ -34,14 +37,18 @@ public class TaskDownloadMeta extends Task {
       metaParameters.put("ExeLocation", "resources/youtube-dl.exe");
       metaParameters.put("ExeArguments", "--write-info-json --skip-download -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
 
-      Execute execute = new Execute(metaParameters);
-      Thread thread = new Thread(execute, "test");
+      execute = new Execute(metaParameters);
+      thread = new Thread(execute, "test");
       thread.start();
       synchronized (execute) {
         try {
           execute.wait();
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          System.out.println("THREAD INTERUPTED!");
+          if (thread != null)
+            thread.interrupt();
+          execute.kill();
+          throw e;
         }
       }
       String line;
@@ -60,11 +67,21 @@ public class TaskDownloadMeta extends Task {
       if (((Vector<File>) parameters.get("metaDataFiles")).size() == 1)
         parameters.put("metadata", new Metadata(((Vector<File>) parameters.get("metaDataFiles")).get(0)));
       updateProgress(100);
-    } catch (Exception e) {
+    } catch (InterruptedException e) {
+      System.out.println("INTERRUPTED TASKMETA");
+    } catch (IOException e) {
       e.printStackTrace();
     } finally {
       decreaseParent();
     }
+  }
+
+  @Override
+  public void kill() {
+    if (thread != null)
+      thread.interrupt();
+    execute.kill();
+    decreaseParent();
   }
 
   void parseLine(String line) {
