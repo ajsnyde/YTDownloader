@@ -1,6 +1,7 @@
 package engine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -18,6 +19,8 @@ public class TaskDownloadVideo extends Task {
   final Pattern quotation = Pattern.compile("\"([^\"]+)\"");
 
   final Pattern progressNumber = Pattern.compile("(\\d+) of (\\d+)");
+  Thread thread;
+  Execute execute;
 
   public TaskDownloadVideo(HashMap<String, Object> parameters) {
     this.parameters = parameters;
@@ -37,15 +40,11 @@ public class TaskDownloadVideo extends Task {
         downloadParameters.put("ExeLocation", "resources/youtube-dl.exe");
         downloadParameters.put("ExeArguments", "-x --audio-format mp3 -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
 
-        Execute execute = new Execute(downloadParameters);
-        Thread thread = new Thread(execute, "test");
+        execute = new Execute(downloadParameters);
+        thread = new Thread(execute, "test");
         thread.start();
         synchronized (execute) {
-          try {
-            execute.wait();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
+          execute.wait();
         }
         String line;
         while ((line = execute.input.readLine()) != null) {
@@ -58,7 +57,10 @@ public class TaskDownloadVideo extends Task {
             + ((Metadata) parameters.get("metadata")).title + ".mp3"));
       }
       updateProgress(100);
-    } catch (Exception e) {
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
       e.printStackTrace();
     } finally {
       decreaseParent();
@@ -97,5 +99,11 @@ public class TaskDownloadVideo extends Task {
       FileLogger.logger().log(Level.FINEST, "placing file in audioLocation: " + line.substring(22));
       parameters.put("audioLocation", new File(line.substring(22)));
     }
+  }
+
+  @Override
+  public void kill() {
+    execute.kill();
+    thread.interrupt();
   }
 }

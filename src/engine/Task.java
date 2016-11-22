@@ -46,7 +46,5 @@ public abstract class Task implements Runnable {
     TaskManager.getInstance().increaseThreadCount();
   }
 
-  public void kill() {
-    decreaseParent();
-  }
+  public abstract void kill();
 }

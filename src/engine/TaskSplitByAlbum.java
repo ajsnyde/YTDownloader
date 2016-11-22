@@ -62,4 +62,8 @@ public class TaskSplitByAlbum extends Task {
       decreaseParent();
     }
   }
+
+  // No easy way to simply cancel the operation of this Task
+  public void kill() {
+  }
 }

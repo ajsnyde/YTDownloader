@@ -44,11 +44,8 @@ public class TaskDownloadMeta extends Task {
         try {
           execute.wait();
         } catch (InterruptedException e) {
-          System.out.println("THREAD INTERUPTED!");
-          if (thread != null)
-            thread.interrupt();
-          execute.kill();
-          throw e;
+          FileLogger.logger().log(Level.WARNING, "DownloadMeta THREAD INTERRUPTED!", e);
+          kill();
         }
       }
       String line;
@@ -67,8 +64,6 @@ public class TaskDownloadMeta extends Task {
       if (((Vector<File>) parameters.get("metaDataFiles")).size() == 1)
         parameters.put("metadata", new Metadata(((Vector<File>) parameters.get("metaDataFiles")).get(0)));
       updateProgress(100);
-    } catch (InterruptedException e) {
-      System.out.println("INTERRUPTED TASKMETA");
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
@@ -78,6 +73,7 @@ public class TaskDownloadMeta extends Task {
 
   @Override
   public void kill() {
+    System.out.println("kill() called!");
     if (thread != null)
       thread.interrupt();
     execute.kill();
@@ -85,7 +81,6 @@ public class TaskDownloadMeta extends Task {
   }
 
   void parseLine(String line) {
-
     if (line.contains("[download]")) {
       try {
         Matcher m = progressNumber.matcher(line);

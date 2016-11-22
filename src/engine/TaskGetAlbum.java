@@ -28,4 +28,9 @@ public class TaskGetAlbum extends Task {
       decreaseParent();
     }
   }
+
+  // no easy way to cancel
+  @Override
+  public void kill() {
+  }
 }

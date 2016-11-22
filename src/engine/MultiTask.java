@@ -10,7 +10,7 @@ import logger.FileLogger;
 public class MultiTask extends TaskTask implements ThreadTracker {
 
   Vector<Task> tasks = new Vector<Task>();
-  Vector<Thread> threads = new Vector<Thread>();
+  Vector<Task> tasksRunning = new Vector<Task>();
   public AtomicInteger MAX_THREADS = new AtomicInteger(5);
   private AtomicInteger CUR_THREADS = new AtomicInteger(0);
   private int sleepTime = 50;
@@ -43,18 +43,18 @@ public class MultiTask extends TaskTask implements ThreadTracker {
   @Override
   public void kill() {
     tasks.clear();
-    // TODO: fix 'threads' memory leak - remove finished threads
-    for (Thread thread : threads)
-      if (thread != null)
-        thread.interrupt();
+    // TODO: fix 'tasksRunning' memory leak - remove finished Tasks
+    for (Task task : tasksRunning)
+      if (task != null)
+        task.kill();
     decreaseParent();
   }
 
   private void maintainThreadCount() {
     while (TaskManager.getInstance().canIncrease() && canIncrease() && tasks.size() > 0) {
       tasks.get(0).parameters.put("parent", this);
-      threads.addElement(new Thread(tasks.remove(0)));
-      threads.lastElement().start();
+      tasksRunning.add(tasks.firstElement());
+      new Thread(tasks.remove(0)).start();
       FileLogger.logger().log(Level.FINEST, CUR_THREADS.get() + "");
     }
   }
