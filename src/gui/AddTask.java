@@ -41,6 +41,7 @@ public class AddTask extends JFrame {
   JProgressBar progressBar = new JProgressBar();
   private MetaTableModel model;
   private Task metadataTask;
+  private JButton btnAdd;
 
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -192,9 +193,26 @@ public class AddTask extends JFrame {
     gbc_panel_7.gridy = 4;
     panel.add(panel_7, gbc_panel_7);
 
-    JButton btnAdd = new JButton("Add");
+    btnAdd = new JButton("Add");
     btnAdd.setEnabled(false);
     panel_7.add(btnAdd);
+    btnAdd.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        metadataTask.kill();
+        for (Metadata meta : model.metas) {
+          TaskBuilder builder = new TaskBuilder().createSequentialTask().put("metadata", meta);
+          if (chckbxDownloadVideo.isSelected())
+            builder.addTask(TASK.TASKDOWNLOADVIDEO);
+          builder.put("extractAudio", chckbxDownloadVideo.isSelected());
+          builder.put("audioFormat", comboBox_1.getSelectedItem().toString().toLowerCase());
+          if (chckbxSplitAudioBy.isSelected())
+            builder.addTask(TASK.TASKGETALBUM).addTask(TASK.TASKSPLITBYALBUM);
+          GUI.addTask(builder.build());
+        }
+
+        dispose();
+      }
+    });
 
     JButton btnCancel = new JButton("Cancel");
     btnCancel.addActionListener(new ActionListener() {
@@ -259,7 +277,11 @@ public class AddTask extends JFrame {
         progressBar.setValue(((Task) arg0.getSource()).progress.intValue());
       }
     });
-
+    builder.build().onCompletion.addElement(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        btnAdd.setEnabled(true);
+      }
+    });
     TaskManager.getInstance().addTask(builder.build());
     metadataTask = builder.build();
   }

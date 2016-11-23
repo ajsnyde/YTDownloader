@@ -22,11 +22,9 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.border.BevelBorder;
 
 import engine.Task;
-import engine.TaskDownloadVideo;
 import engine.TaskManager;
 import tables.DownloadTableModel;
 import tables.ProgressCellRenderer;
@@ -39,7 +37,7 @@ import java.awt.event.MouseEvent;
 public class GUI {
 
   private JFrame frmYetAnotherYoutube;
-  private DownloadTableModel model;
+  private static DownloadTableModel model;
 
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -166,12 +164,10 @@ public class GUI {
     });
   }
 
-  public void addVideoDownloadTask(String url) {
-    HashMap<String, Object> parameters = new HashMap<String, Object>();
-    parameters.put("ExeLocation", "resources/youtube-dl.exe");
-    parameters.put("ExeArguments", "--write-info-json -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + url);
-    parameters.put("model", model);
-    TaskManager.getInstance().addTask(new TaskDownloadVideo(parameters));
+  public static void addTask(Task task) {
+    task.parameters.put("model", model);
+    model.addTask(task);
+    TaskManager.getInstance().addTask(task);
   }
 
   public void addTaskGUI(String[] urls) {

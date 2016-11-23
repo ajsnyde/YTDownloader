@@ -19,7 +19,7 @@ public class MetaTableModel extends AbstractTableModel {
 
   private static String[] headers = new String[] { "Title", "Url", "Uploader", "Description" };
 
-  private List<Metadata> metas;
+  public List<Metadata> metas;
 
   public MetaTableModel(List<Metadata> metas) {
     this.metas = metas;

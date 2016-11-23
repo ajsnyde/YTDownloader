@@ -38,7 +38,8 @@ public class TaskDownloadVideo extends Task {
               .exists()) {
         HashMap<String, Object> downloadParameters = new HashMap<String, Object>();
         downloadParameters.put("ExeLocation", "resources/youtube-dl.exe");
-        downloadParameters.put("ExeArguments", "-x --audio-format mp3 -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
+        downloadParameters.put("ExeArguments",
+            (parameters.get("extractAudio") == "true" ? "-x --audio-format mp3" : "") + " -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
 
         execute = new Execute(downloadParameters);
         thread = new Thread(execute, "test");
