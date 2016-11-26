@@ -29,6 +29,7 @@ public class TaskTask extends Task {
         currentTask = tasks.get(i);
         currentTask.run();
       }
+      status = "All tasks complete!";
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
