@@ -27,7 +27,7 @@ public class TaskDownloadMeta extends Task {
   public void run() {
     increaseParent();
     try {
-
+      status = "Grabbing Metadata";
       if (parameters.get("metaDataFiles") == null)
         parameters.put("metaDataFiles", new Vector<File>());
       if (parameters.get("metaDatas") == null)
@@ -77,7 +77,6 @@ public class TaskDownloadMeta extends Task {
     if (thread != null)
       thread.interrupt();
     execute.kill();
-    decreaseParent();
   }
 
   void parseLine(String line) {

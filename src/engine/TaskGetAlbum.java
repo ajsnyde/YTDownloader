@@ -20,11 +20,13 @@ public class TaskGetAlbum extends Task {
   public void run() {
     increaseParent();
     try {
+      updateProgress(0);
       parameters.put("album", new AutoRegex().getAlbum(((Metadata) parameters.get("metadata")).description, ((Metadata) parameters.get("metadata")).length));
       ((Album) (parameters.get("album"))).albumName = ((Metadata) (parameters.get("metadata"))).title;
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
+      updateProgress(100);
       decreaseParent();
     }
   }

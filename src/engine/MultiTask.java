@@ -1,5 +1,7 @@
 package engine;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,7 +64,7 @@ public class MultiTask extends TaskTask implements ThreadTracker {
   public void decreaseThreadCount() {
     CUR_THREADS.decrementAndGet();
     taskComplete++;
-    updateProgress((int) (100.0 * taskComplete / taskCount));
+    updateProgress(100);
   }
 
   public void increaseThreadCount() {
@@ -76,4 +78,21 @@ public class MultiTask extends TaskTask implements ThreadTracker {
   public boolean canIncrease() {
     return CUR_THREADS.get() < MAX_THREADS.get();
   }
+
+  @Override
+  void updateProgress(int in) {
+    int numJobs = tasks.size() + tasksRunning.size();
+    double tempProgress = 0.0;
+    for (Task task : tasks)
+      tempProgress += (task.progress / numJobs);
+    for (Task task : tasksRunning)
+      tempProgress += (task.progress / numJobs);
+    progress = tempProgress;
+    for (ActionListener listener : onUpdate)
+      listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ""));
+    if (parameters.get("parent") != null)
+      // 50 is a placeholder - input shouldn't matter
+      ((Task) parameters.get("parent")).updateProgress(50);
+  }
+
 }

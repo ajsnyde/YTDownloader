@@ -28,19 +28,23 @@ public class TaskDownloadVideo extends Task {
       ((DownloadTableModel) parameters.get("model")).addTask(this);
   }
 
+  // requires combination of extractAudio, url, metadata
+  // may add audioLocation
   @Override
   public void run() {
     increaseParent();
     try {
-      // Check for existing mp3 using metadata file
+      FileLogger.logger().log(Level.FINEST, "Downloading!");
+      status = "Starting";
+      // Check for existing mp3 using metadata file - if both exist, skip download
       if (parameters.get("metadata") == null || !new File(
           "Downloads\\" + ((Metadata) parameters.get("metadata")).uploader + "\\" + ((Metadata) parameters.get("metadata")).uploader + " - " + ((Metadata) parameters.get("metadata")).title + ".mp3")
               .exists()) {
+        status = "Downloading video";
         HashMap<String, Object> downloadParameters = new HashMap<String, Object>();
         downloadParameters.put("ExeLocation", "resources/youtube-dl.exe");
         downloadParameters.put("ExeArguments",
             (parameters.get("extractAudio") == "true" ? "-x --audio-format mp3" : "") + " -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
-
         execute = new Execute(downloadParameters);
         thread = new Thread(execute, "test");
         thread.start();
@@ -54,11 +58,12 @@ public class TaskDownloadVideo extends Task {
         }
 
       } else {
+        status = "Pre-existing audio file detected - skipping download!";
         parameters.put("audioLocation", new File("Downloads\\" + ((Metadata) parameters.get("metadata")).uploader + "\\" + ((Metadata) parameters.get("metadata")).uploader + " - "
             + ((Metadata) parameters.get("metadata")).title + ".mp3"));
       }
       updateProgress(100);
-
+      status = "Download complete!";
     } catch (IOException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
@@ -97,6 +102,8 @@ public class TaskDownloadVideo extends Task {
     }
 
     if (line.contains("[ffmpeg] Destination: ")) {
+      status = "Converting to Audio";
+      updateProgress(progress); // needed to update parent of status - might want to facilitate in future...
       FileLogger.logger().log(Level.FINEST, "placing file in audioLocation: " + line.substring(22));
       parameters.put("audioLocation", new File(line.substring(22)));
     }

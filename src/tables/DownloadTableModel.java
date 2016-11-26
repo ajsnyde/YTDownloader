@@ -1,9 +1,12 @@
 //http://www.programcreek.com/java-api-examples/index.php?source_dir=JavaTorrent-master/torrent/frame/table/TorrentTableModel.java
 package tables;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
+import engine.Metadata;
 import engine.Task;
 
 public class DownloadTableModel extends AbstractTableModel {
@@ -46,7 +49,7 @@ public class DownloadTableModel extends AbstractTableModel {
 
     switch (columnIndex) {
     case COL_NAME:
-      return task.name;
+      return task.parameters.get("metadata") != null ? ((Metadata) task.parameters.get("metadata")).title : "No metadata available";
     case COL_PROGRESS:
       return task.progress;
     case COL_STATUS:
@@ -64,6 +67,11 @@ public class DownloadTableModel extends AbstractTableModel {
 
   public void addTask(Task task) {
     tasks.add(task);
+    task.onUpdate.addElement(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        fireTableDataChanged();
+      }
+    });
     this.fireTableDataChanged();
   }
 

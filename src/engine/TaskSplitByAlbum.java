@@ -23,8 +23,11 @@ public class TaskSplitByAlbum extends Task {
   public void run() {
     increaseParent();
     try {
+      status = "Splitting by Album";
+      updateProgress(0);
+
       Album album = (Album) parameters.get("album");
-      FileLogger.logger().log(Level.FINEST, ((File) parameters.get("audioLocation")).getAbsolutePath());
+      // FileLogger.logger().log(Level.FINEST, ((File) parameters.get("audioLocation")).getAbsolutePath());
       // TODO: updateProgress
       FileLogger.logger().log(Level.FINEST, "Album being processed");
       FileLogger.logger().log(Level.FINEST, album.albumName);
@@ -38,6 +41,7 @@ public class TaskSplitByAlbum extends Task {
       // This should alleviate that issue assuming proper permissions. Note that I moved it outside of the loop. Perhaps this will fix the !1st song being written outside of the dir.
       File dir = new File("Downloads/" + meta.uploader + "/" + meta.title);
       boolean success = dir.mkdir();
+      status = "Splitting Audio by Song";
 
       for (Song song : album.songs) {
         FileLogger.logger().log(Level.FINEST, "Song being processed");
@@ -53,8 +57,11 @@ public class TaskSplitByAlbum extends Task {
         process.waitFor();
         process = new ProcessBuilder("resources/id3tool.exe", "-t", song.title + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
         process.waitFor();
+        updateProgress(((double) i / album.songs.size()) * 100.0);
         i++;
       }
+      status = "Splitting by Audio - Complete";
+      updateProgress(100);
 
     } catch (Exception e) {
       e.printStackTrace();

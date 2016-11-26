@@ -202,8 +202,8 @@ public class AddTask extends JFrame {
         for (Metadata meta : model.metas) {
           TaskBuilder builder = new TaskBuilder().createSequentialTask().put("metadata", meta);
           if (chckbxDownloadVideo.isSelected())
-            builder.addTask(TASK.TASKDOWNLOADVIDEO);
-          builder.put("extractAudio", chckbxDownloadVideo.isSelected());
+            builder.addTask(TASK.TASKDOWNLOADVIDEO, true).put("metadata", meta).put("url", meta.url).put("parent", builder.build());
+          builder.put("extractAudio", chckbxDownloadVideo.isSelected() ? "true" : "false");
           builder.put("audioFormat", comboBox_1.getSelectedItem().toString().toLowerCase());
           if (chckbxSplitAudioBy.isSelected())
             builder.addTask(TASK.TASKGETALBUM).addTask(TASK.TASKSPLITBYALBUM);

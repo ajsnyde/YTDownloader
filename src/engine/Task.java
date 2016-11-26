@@ -24,14 +24,24 @@ public abstract class Task implements Runnable {
   public Vector<ActionListener> onCompletion = new Vector<ActionListener>();
   public Vector<ActionListener> onUpdate = new Vector<ActionListener>();
 
+  void updateProgress() {
+    updateProgress(progress);
+  }
+
+  void updateProgress(double in) {
+    updateProgress((int) in);
+  }
+
   void updateProgress(int in) {
     progress = (double) in;
     for (ActionListener listener : onUpdate)
       listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ""));
+    if (parameters.get("parent") != null)
+      ((Task) parameters.get("parent")).updateProgress();
   }
 
   void decreaseParent() {
-    if (((ThreadTracker) parameters.get("parent")) != null)
+    if ((parameters.get("parent")) != null && parameters.get("parent") instanceof ThreadTracker)
       ((ThreadTracker) parameters.get("parent")).decreaseThreadCount();
     // else
     for (ActionListener listener : onCompletion)
@@ -40,7 +50,7 @@ public abstract class Task implements Runnable {
   }
 
   void increaseParent() {
-    if (((ThreadTracker) parameters.get("parent")) != null)
+    if ((parameters.get("parent")) != null && parameters.get("parent") instanceof ThreadTracker)
       ((ThreadTracker) parameters.get("parent")).increaseThreadCount();
     // else
     TaskManager.getInstance().increaseThreadCount();
