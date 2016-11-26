@@ -1,10 +1,11 @@
 # YTDownloader
-Yet another Youtube downloader
+Yet another Youtube downloader (Windows Only)
 YTDownloader
 By Addison Snyder
 
 Built 11/26/16
 Source available here: https://github.com/ajsnyde/YTDownloader
+Runnable JAR available here: http://addisonsnyder.com/projects/YTDownloader.zip
 
 HOW TO USE
 ~~~~~~~~~~~~~~~~~~~
