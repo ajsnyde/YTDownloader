@@ -22,10 +22,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import engine.Task;
 import engine.TaskManager;
+import logger.FileLogger;
 import tables.DownloadTableModel;
 import tables.ProgressCellRenderer;
 
@@ -33,6 +38,9 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.FlowLayout;
 
 public class GUI {
 
@@ -83,6 +91,31 @@ public class GUI {
     gbl_fullPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
     gbl_fullPanel.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
     fullPanel.setLayout(gbl_fullPanel);
+
+    JPanel panel = new JPanel();
+    FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+    flowLayout.setAlignment(FlowLayout.LEFT);
+    GridBagConstraints gbc_panel = new GridBagConstraints();
+    gbc_panel.insets = new Insets(0, 0, 5, 5);
+    gbc_panel.fill = GridBagConstraints.BOTH;
+    gbc_panel.gridx = 1;
+    gbc_panel.gridy = 0;
+    fullPanel.add(panel, gbc_panel);
+
+    JLabel lblMaxThreads = new JLabel("Max Threads:");
+    panel.add(lblMaxThreads);
+
+    JSpinner spinner = new JSpinner();
+    spinner.setPreferredSize(new Dimension(40, 20));
+    spinner.setModel(new SpinnerNumberModel(new Integer(4), new Integer(1), null, new Integer(1)));
+    panel.add(spinner);
+    spinner.addChangeListener(new ChangeListener() {
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        TaskManager.MAX_THREADS.set((int) spinner.getValue());
+        FileLogger.logger().log(Level.FINER, "Max Thread Changed to " + (int) spinner.getValue());
+      }
+    });
 
     JPanel splitPaneContainer = new JPanel();
     splitPaneContainer.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));

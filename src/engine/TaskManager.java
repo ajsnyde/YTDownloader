@@ -8,7 +8,7 @@ import logger.FileLogger;
 
 public class TaskManager implements Runnable, ThreadTracker {
   Vector<Task> tasks = new Vector<Task>();
-  public static AtomicInteger MAX_THREADS = new AtomicInteger(200);
+  public static AtomicInteger MAX_THREADS = new AtomicInteger(4);
   private static AtomicInteger CUR_THREADS = new AtomicInteger(0);
   private static TaskManager instance = null;
 

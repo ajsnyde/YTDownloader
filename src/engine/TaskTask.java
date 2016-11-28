@@ -23,7 +23,6 @@ public class TaskTask extends Task {
 
   @Override
   public void run() {
-    increaseParent();
     try {
       for (int i = 0; i < tasks.size(); ++i) {
         currentTask = tasks.get(i);
@@ -33,7 +32,6 @@ public class TaskTask extends Task {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      decreaseParent();
     }
   }
 

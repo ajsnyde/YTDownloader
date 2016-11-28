@@ -11,10 +11,11 @@ public class FileLogger {
 
   private static FileLogger instance = null;
   public static Logger logger;
+  public static final String logFileLocation = "logs/";
   FileHandler fh;
   File logFile;
 
-  public static FileLogger getInstance() {
+  public static synchronized FileLogger getInstance() {
     if (instance == null) {
       instance = new FileLogger();
     }
@@ -23,12 +24,13 @@ public class FileLogger {
 
   protected FileLogger() {
     try {
-      int i = 0;
+      if (!new File(logFileLocation).exists())
+        new File(logFileLocation).mkdirs();
+      int i;
       // This block configure the logger with handler and formatter
-      for (i = 0; new File(String.format("%03d", i) + "LogFile.log").exists() && i < 100; ++i) {
-
+      for (i = 0; new File(logFileLocation + String.format("%03d", i) + "LogFile.log").exists() && i < 100; ++i) {
       }
-      fh = new FileHandler(String.format("%03d", i) + "LogFile.log");
+      fh = new FileHandler(logFileLocation + String.format("%03d", i) + "LogFile.log");
       logger = Logger.getLogger("MyLog");
       logger.setLevel(Level.ALL);
       logger.addHandler(fh);
@@ -45,7 +47,7 @@ public class FileLogger {
   }
 
   // functional AND elegant
-  public static Logger logger() {
+  public static synchronized Logger logger() {
     return getInstance().logger;
   }
 }
