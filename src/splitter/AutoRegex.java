@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import logger.FileLogger;
+import youtubeObjects.Album;
+import youtubeObjects.Song;
 
 /*
  * DOCUMENTATION:

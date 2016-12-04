@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-import engine.Metadata;
-import engine.Task;
+import tasks.Task;
+import youtubeObjects.Metadata;
 
 public class DownloadTableModel extends AbstractTableModel {
 

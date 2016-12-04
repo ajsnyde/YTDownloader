@@ -1,4 +1,4 @@
-package splitter;
+package youtubeObjects;
 
 import java.util.ArrayList;
 

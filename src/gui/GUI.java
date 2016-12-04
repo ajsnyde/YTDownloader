@@ -28,11 +28,11 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import engine.Task;
-import engine.TaskManager;
 import logger.FileLogger;
 import tables.DownloadTableModel;
 import tables.ProgressCellRenderer;
+import tasks.Task;
+import tasks.TaskManager;
 
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;

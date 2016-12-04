@@ -1,4 +1,4 @@
-package engine;
+package tasks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,6 +7,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
+import engine.ThreadTracker;
 import logger.FileLogger;
 
 public class MultiTask extends TaskTask implements ThreadTracker {

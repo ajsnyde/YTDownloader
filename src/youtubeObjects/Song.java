@@ -1,4 +1,4 @@
-package splitter;
+package youtubeObjects;
 
 public class Song {
   public String title;

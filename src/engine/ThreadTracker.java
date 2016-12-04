@@ -2,6 +2,8 @@ package engine;
 
 import java.util.Vector;
 
+import tasks.Task;
+
 public interface ThreadTracker {
 
   Vector<Task> tasks = new Vector<Task>();

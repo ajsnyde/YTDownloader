@@ -1,10 +1,11 @@
-package engine;
+package tasks;
 
 import java.util.HashMap;
 
 import splitter.AutoRegex;
 import tables.DownloadTableModel;
-import splitter.Album;
+import youtubeObjects.Album;
+import youtubeObjects.Metadata;
 
 public class TaskGetAlbum extends Task {
 

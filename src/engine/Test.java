@@ -1,6 +1,8 @@
 package engine;
 
-import engine.TaskBuilder.TASK;
+import tasks.TaskBuilder;
+import tasks.TaskManager;
+import tasks.TaskBuilder.TASK;
 
 public class Test {
 

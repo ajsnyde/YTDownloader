@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import engine.Metadata;
+import youtubeObjects.Metadata;
 
 public class MetaTableModel extends AbstractTableModel {
 

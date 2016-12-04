@@ -1,9 +1,10 @@
-package engine;
+package tasks;
 
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
+import engine.ThreadTracker;
 import logger.FileLogger;
 
 public class TaskManager implements Runnable, ThreadTracker {

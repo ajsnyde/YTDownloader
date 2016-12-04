@@ -11,12 +11,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.TitledBorder;
 
-import engine.Metadata;
-import engine.Task;
-import engine.TaskBuilder;
-import engine.TaskBuilder.TASK;
-import engine.TaskManager;
 import tables.MetaTableModel;
+import tasks.Task;
+import tasks.TaskBuilder;
+import tasks.TaskManager;
+import tasks.TaskBuilder.TASK;
+import youtubeObjects.Metadata;
+
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JComboBox;

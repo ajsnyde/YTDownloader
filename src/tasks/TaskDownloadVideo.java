@@ -1,4 +1,4 @@
-package engine;
+package tasks;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import logger.FileLogger;
 import tables.DownloadTableModel;
+import youtubeObjects.Metadata;
 
 //should accept ONE url video to download from
 //adds video file location

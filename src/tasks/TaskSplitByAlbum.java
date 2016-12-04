@@ -1,13 +1,14 @@
-package engine;
+package tasks;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 
 import logger.FileLogger;
-import splitter.Album;
-import splitter.Song;
 import tables.DownloadTableModel;
+import youtubeObjects.Album;
+import youtubeObjects.Metadata;
+import youtubeObjects.Song;
 
 public class TaskSplitByAlbum extends Task {
 
