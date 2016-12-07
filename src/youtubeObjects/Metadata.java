@@ -5,15 +5,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import javax.persistence.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import logger.FileLogger;
+
 // This class pertains to ONE video/mp3/album/metadata file
 @Entity
-@Table(name = "Metadata")
 public class Metadata {
 
   public String url;
@@ -25,11 +27,17 @@ public class Metadata {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   public File metaDataFile;
 
+  public Metadata() {
+  }
+
   public Metadata(File file) {
     this.metaDataFile = file;
     uploader = getMetaElement("uploader");
     title = getMetaElement("title");
-    length = Integer.parseInt(getMetaElement("duration"));
+    try {
+      length = Integer.parseInt(getMetaElement("duration"));
+    } catch (NumberFormatException e) {
+    }
     description = getMetaElement("description");
     url = getMetaElement("webpage_url");
   }
@@ -44,7 +52,8 @@ public class Metadata {
       else
         return null;
     } catch (Exception e) {
-      return e.getMessage();
+      FileLogger.logger().log(Level.WARNING, "Metadata read error: " + e.getMessage());
+      return "";
     }
   }
 

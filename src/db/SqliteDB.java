@@ -1,6 +1,9 @@
 package db;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
@@ -17,6 +20,7 @@ public class SqliteDB {
 
   public File dbLocation = new File("db/data.db");
   public String connectionString = "jdbc:sqlite:" + dbLocation.getAbsolutePath();
+  EntityManager em;
   Connection c;
 
   public static void main(String[] args) {
@@ -42,21 +46,31 @@ public class SqliteDB {
   }
 
   public void testEntity() {
-
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("Metadata");
-    EntityManager em = factory.createEntityManager();
+    EntityManagerFactory factory = Persistence.createEntityManagerFactory("YTDownloader");
+    em = factory.createEntityManager();
 
     // Read the existing entries and write to console
     Query q = em.createQuery("SELECT u FROM Metadata u");
     List<Metadata> userList = q.getResultList();
     System.out.println("Size: " + userList.size());
 
-    // Create new user
-    em.getTransaction().begin();
-    Metadata user = new Metadata(new File(""));
-    em.persist(user);
-    em.getTransaction().commit();
+    try {
+      Files.find(Paths.get("Downloads"), 999, (p, bfa) -> bfa.isRegularFile()).forEach(path -> addMeta(path.toFile()));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    q = em.createQuery("SELECT u FROM Metadata u");
+    userList = q.getResultList();
+    System.out.println("Size: " + userList.size());
 
     em.close();
+  }
+
+  public void addMeta(File file) {
+    em.getTransaction().begin();
+    Metadata user = new Metadata(file);
+    em.persist(user);
+    em.getTransaction().commit();
   }
 }
