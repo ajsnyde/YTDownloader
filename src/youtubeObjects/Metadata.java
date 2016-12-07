@@ -6,11 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.persistence.*;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 // This class pertains to ONE video/mp3/album/metadata file
-
+@Entity
+@Table(name = "Metadata")
 public class Metadata {
 
   public String url;
@@ -18,6 +21,8 @@ public class Metadata {
   public String title;
   public String description;
   public int length;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   public File metaDataFile;
 
   public Metadata(File file) {
