@@ -55,7 +55,7 @@ public class SqliteDB {
     System.out.println("Size: " + userList.size());
 
     try {
-      Files.find(Paths.get("Downloads"), 999, (p, bfa) -> bfa.isRegularFile()).forEach(path -> addMeta(path.toFile()));
+      Files.find(Paths.get("Downloads"), 999, (p, bfa) -> bfa.isRegularFile() && p.toFile().getAbsolutePath().endsWith("json")).forEach(path -> addMeta(path.toFile()));
     } catch (IOException e) {
       e.printStackTrace();
     }
