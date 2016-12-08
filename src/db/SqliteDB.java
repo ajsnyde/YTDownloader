@@ -14,6 +14,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import org.sqlite.SQLiteConfig;
+
 import youtubeObjects.Metadata;
 
 public class SqliteDB {
@@ -24,7 +26,7 @@ public class SqliteDB {
   Connection c;
 
   public static void main(String[] args) {
-    SqliteDB db = new SqliteDB();
+    SQLiteConfig config = new SQLiteConfig();
   }
 
   SqliteDB() {
@@ -36,6 +38,7 @@ public class SqliteDB {
     try {
       Class.forName("org.sqlite.JDBC");
       new File("db").mkdir();
+
       c = DriverManager.getConnection(connectionString);
       logger.FileLogger.logger().log(Level.FINE, "Opened database successfully: " + dbLocation.getAbsolutePath());
       return true;
@@ -46,7 +49,7 @@ public class SqliteDB {
   }
 
   public void testEntity() {
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("YTDownloader");
+    EntityManagerFactory factory = Persistence.createEntityManagerFactory("org.sqlite.SQLiteConnection");
     em = factory.createEntityManager();
 
     // Read the existing entries and write to console
@@ -65,6 +68,7 @@ public class SqliteDB {
     System.out.println("Size: " + userList.size());
 
     em.close();
+    factory.close();
   }
 
   public void addMeta(File file) {

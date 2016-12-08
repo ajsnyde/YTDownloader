@@ -24,37 +24,51 @@ public class Metadata {
   public String description;
   public int length;
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   public File metaDataFile;
 
   public Metadata() {
   }
 
   public Metadata(File file) {
+    if (!file.exists())
+      FileLogger.logger().log(Level.WARNING, "Metadata file does not exist: " + file.getAbsolutePath());
     this.metaDataFile = file;
-    uploader = getMetaElement("uploader");
-    title = getMetaElement("title");
+    ArrayList<String> metas = getMetaElements("uploader", "title", "duration", "description", "webpage_url");
+    uploader = metas.get(0);
+    title = metas.get(1);
     try {
-      length = Integer.parseInt(getMetaElement("duration"));
+      length = Integer.parseInt(metas.get(2));
     } catch (NumberFormatException e) {
     }
-    description = getMetaElement("description");
-    url = getMetaElement("webpage_url");
+    description = metas.get(3);
+    url = metas.get(4);
   }
 
   public String getMetaElement(String element) {
     JSONParser parser = new JSONParser();
-    ArrayList<String> out = new ArrayList<String>();
     try {
-      JSONObject jsonObject;
       if (metaDataFile.exists())
         return ((JSONObject) parser.parse(readFile(metaDataFile))).get(element).toString();
       else
         return null;
     } catch (Exception e) {
       FileLogger.logger().log(Level.WARNING, "Metadata read error: " + e.getMessage());
-      return "";
+      return null;
     }
+  }
+
+  public ArrayList<String> getMetaElements(String... elements) {
+    JSONParser parser = new JSONParser();
+    ArrayList<String> out = new ArrayList<String>();
+    for (String element : elements)
+      try {
+        if (metaDataFile.exists())
+          out.add(((JSONObject) parser.parse(readFile(metaDataFile))).get(element).toString());
+      } catch (Exception e) {
+        out.add(null);
+        FileLogger.logger().log(Level.WARNING, "Metadata read error: " + e.getMessage());
+      }
+    return out;
   }
 
   private String readFile(File file) throws IOException {
