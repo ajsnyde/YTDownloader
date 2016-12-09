@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="org.sqlite.SQLiteConnection" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="derby-eclipselink" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>youtubeObjects.Metadata</class>
 		<class>youtubeObjects.Song</class>
 		<class>youtubeObjects.Album</class>
 		<properties>
-			<property name="eclipselink.target-database" value="Database"/>
-			<property name="javax.persistence.jdbc.driver" value="org.sqlite.SQLiteConnection"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite:db/data.db"/>
+			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.DerbyPlatform"/>
+			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:db/derby;create=true" />
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
 		</properties>
 	</persistence-unit>
 </persistence>

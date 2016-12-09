@@ -75,16 +75,16 @@ public class AutoRegex {
 
       // set start and end times to song
       m.find();
-      song.start = RegexHelper.parseSeconds(m.group(1));
+      song.startTime = RegexHelper.parseSeconds(m.group(1));
       song.number = lineNum;
 
       if (lineNum > 1) {
-        lastSong.end = RegexHelper.parseSeconds(m.group(1));
+        lastSong.endTime = RegexHelper.parseSeconds(m.group(1));
         album.songs.add(lastSong);
       }
       lastSong = song;
     }
-    lastSong.end = length;
+    lastSong.endTime = length;
     album.songs.add(lastSong);
 
     // description2 will be description stripped of timestamps
@@ -119,9 +119,9 @@ public class AutoRegex {
 
         // set start and end times to song
         m.find();
-        song.start = RegexHelper.parseSeconds(m.group(1));
+        song.startTime = RegexHelper.parseSeconds(m.group(1));
         m.find();
-        song.end = RegexHelper.parseSeconds(m.group(1));
+        song.endTime = RegexHelper.parseSeconds(m.group(1));
 
         line = removeTimestamps(line);
         // System.out.println(line);

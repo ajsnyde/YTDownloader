@@ -1,12 +1,15 @@
 package youtubeObjects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(schema = "APP")
 public class Song {
 
   @Id
@@ -23,11 +26,11 @@ public class Song {
    * ALTER TABLE SONG ADD CONSTRAINT FK_SONG_TITLE FOREIGN KEY (TITLE) REFERENCES ALBUM (ALBUMNAME)
    */
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "title", insertable = false, updatable = false)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "albumName", insertable = false, updatable = false)
   public Album album;
-  public int start;
-  public int end;
+  public int startTime;
+  public int endTime;
   public int number;
 
   public Song() {

@@ -5,11 +5,13 @@
 	<classpathentry kind="lib" path="resources/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="resources/sqlite-jdbc-3.15.1.jar"/>
 	<classpathentry kind="lib" path="resources/javax.persistence-3.0-prelude-embedded-m2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="resources/derby.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.5.2">
 		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 			<attribute name="owner.project.facets" value="jpt.jpa"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -16,14 +16,15 @@ import logger.FileLogger;
 
 // This class pertains to ONE video/mp3/album/metadata file
 @Entity
+@Table(schema = "APP")
 public class Metadata {
-
+  @Id
   public String url;
   public String uploader;
   public String title;
+  @Column(length = 10000)
   public String description;
   public int length;
-  @Id
   public File metaDataFile;
 
   public Metadata() {
