@@ -4,7 +4,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -26,13 +25,16 @@ public class Song {
    * ALTER TABLE SONG ADD CONSTRAINT FK_SONG_TITLE FOREIGN KEY (TITLE) REFERENCES ALBUM (ALBUMNAME)
    */
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-  @JoinColumn(name = "albumName", insertable = false, updatable = false)
   public Album album;
   public int startTime;
   public int endTime;
   public int number;
 
   public Song() {
+  }
+
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  public Album getAlbum() {
+    return album;
   }
 }
