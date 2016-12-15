@@ -8,9 +8,13 @@
 		<properties>
 			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.DerbyPlatform"/>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:derby:db/derby;create=true" />
-			<property name="eclipselink.ddl-generation" value="none" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:db/Derby;create=true" />
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<property name="eclipselink.logging.file" value="logs/derby.log"/>
+			<property name="eclipselink.logging.level" value="FINEST"/>
+			<property name="eclipselink.logging.level.sql" value="FINEST"/>
+			<property name="eclipselink.logging.parameters" value="true"/>
 		</properties>
 	</persistence-unit>
 </persistence>

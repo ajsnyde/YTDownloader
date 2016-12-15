@@ -7,3 +7,5 @@ bin
 *.log
 *.2
 *.1
+/db/Derby/seg0/*.dat
+/db/Derby
