@@ -17,9 +17,11 @@ import logger.FileLogger;
 import youtubeObjects.Album;
 import youtubeObjects.Metadata;
 
+// If I were going for best practice, I'd have a parent class, allowing one to change the DB platform without a bunch of code changes in unrelated classes. But given the scope of the project, I'm not too worried.
+
 public class DerbyDB {
   EntityManagerFactory factory;
-  EntityManager em;
+  static EntityManager em;
   Connection c;
   Query q;
 
@@ -32,32 +34,30 @@ public class DerbyDB {
       EntityManagerFactory factory = Persistence.createEntityManagerFactory("derby-eclipselink");
       em = factory.createEntityManager();
     } catch (Exception e) {
-      FileLogger.logger().log(Level.FINER, e.getMessage());
-    }
-
-    try {
-      Files.find(Paths.get("Downloads"), 999, (p, bfa) -> bfa.isRegularFile() && p.toFile().getAbsolutePath().endsWith("json")).forEach(path -> addMeta(path.toFile()));
-    } catch (IOException e) {
-      FileLogger.logger().log(Level.FINER, e.getMessage());
+      FileLogger.logger().log(Level.SEVERE, e.getMessage());
     }
   }
 
   public void addMeta(File file) {
     try {
-      FileLogger.logger().log(Level.FINER, "Adding meta: " + file);
-      em.getTransaction().begin();
-      Metadata user = new Metadata(file);
-      em.persist(user);
-      em.getTransaction().commit();
+      FileLogger.logger().log(Level.FINER, "Adding meta from file: " + file);
+      persist(new Metadata(file));
     } catch (Exception e) {
-
+      FileLogger.logger().log(Level.WARNING, "Adding meta from file failed: " + file);
     }
   }
 
-  public void persist(Object obj) {
-    em.getTransaction().begin();
-    em.persist(obj);
-    em.getTransaction().commit();
+  public static void persist(Object obj) {
+    try {
+      if (em == null)
+        new DerbyDB();
+
+      em.getTransaction().begin();
+      em.persist(obj);
+      em.getTransaction().commit();
+    } catch (Exception e) {
+      FileLogger.logger().log(Level.FINEST, "Persisting object failed: " + e.toString());
+    }
   }
 
   public void numAlbums() {
@@ -65,6 +65,14 @@ public class DerbyDB {
     List<Album> albums = q.getResultList();
     System.out.println("first album: " + albums.get(0).albumName);
     System.out.println("Songs of first album: " + albums.get(0).songs.size());
+  }
+
+  public void initMeta() {
+    try {
+      Files.find(Paths.get("Downloads"), 999, (p, bfa) -> bfa.isRegularFile() && p.toFile().getAbsolutePath().endsWith("json")).forEach(path -> addMeta(path.toFile()));
+    } catch (IOException e) {
+      FileLogger.logger().log(Level.WARNING, e.toString());
+    }
   }
 
   public void close() {

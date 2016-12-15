@@ -2,6 +2,7 @@ package tasks;
 
 import java.util.HashMap;
 
+import db.DerbyDB;
 import splitter.AutoRegex;
 import tables.DownloadTableModel;
 import youtubeObjects.Album;
@@ -24,6 +25,7 @@ public class TaskGetAlbum extends Task {
       updateProgress(0);
       parameters.put("album", new AutoRegex().getAlbum(((Metadata) parameters.get("metadata")).description, ((Metadata) parameters.get("metadata")).length));
       ((Album) (parameters.get("album"))).albumName = ((Metadata) (parameters.get("metadata"))).title;
+      DerbyDB.persist(parameters.get("album"));
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

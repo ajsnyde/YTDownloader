@@ -43,6 +43,8 @@ import youtubeObjects.Song;
 
 public class AutoRegex {
 
+  Album album = new Album();
+
   public int numPasses = 4;
 
   public Album getAlbum(String description, int length) {
@@ -50,20 +52,23 @@ public class AutoRegex {
     description = preprocess(description);
 
     FileLogger.logger().log(Level.FINEST, description);
-    Album album;
+
     if (isDoubleTimestamped(description))
-      album = DoubleTimestampMethod(description);
+      DoubleTimestampMethod(description);
     else if (isSingleTimestamped(description))
-      album = SingleTimestampMethod(description, length);
+      SingleTimestampMethod(description, length);
     else
       return new Album();
     album.length = length;
+
+    // Required for database to have relationships correctly recorded
+    for (Song song : album.songs)
+      song.album = album;
+
     return album;
   }
 
-  private Album SingleTimestampMethod(String description, int length) {
-    Album album = new Album();
-
+  private void SingleTimestampMethod(String description, int length) {
     int lineNum = 0;
     Song lastSong = new Song();
     for (String line : description.split("\n")) {
@@ -102,11 +107,9 @@ public class AutoRegex {
     for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
       album.songs.get(i).title = lines[i];
     }
-    return album;
   }
 
-  private Album DoubleTimestampMethod(String description) {
-    Album album = new Album();
+  private void DoubleTimestampMethod(String description) {
 
     int lineNum = 0;
     String description2 = "";
@@ -140,8 +143,6 @@ public class AutoRegex {
     for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
       album.songs.get(i).title = lines[i];
     }
-
-    return album;
   }
 
   // Finds and deletes timestamps, returning the resulting left or right side, whichever is larger

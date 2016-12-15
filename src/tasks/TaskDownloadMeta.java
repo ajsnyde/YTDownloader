@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import db.DerbyDB;
 import logger.FileLogger;
 import youtubeObjects.Metadata;
 
@@ -32,7 +33,7 @@ public class TaskDownloadMeta extends Task {
       if (parameters.get("metaDataFiles") == null)
         parameters.put("metaDataFiles", new Vector<File>());
       if (parameters.get("metaDatas") == null)
-        parameters.put("metaDatas", new Vector<File>());
+        parameters.put("metaDatas", new Vector<Metadata>());
 
       HashMap<String, Object> metaParameters = new HashMap<String, Object>();
       metaParameters.put("ExeLocation", "resources/youtube-dl.exe");
@@ -58,12 +59,19 @@ public class TaskDownloadMeta extends Task {
       // After grabbing metadata files, process into Metadata objects and add to parameters
       // TODO: add progress increase
       for (File metaFile : (Vector<File>) parameters.get("metaDataFiles")) {
-        ((Vector<Metadata>) (parameters.get("metaDatas"))).addElement(new Metadata(metaFile));
+        Metadata metadata = new Metadata(metaFile);
+        ((Vector<Metadata>) (parameters.get("metaDatas"))).addElement(metadata);
+        DerbyDB.persist(metadata);
         FileLogger.logger().log(Level.FINEST, "Creating new Metadata: " + metaFile);
       }
       // if only a single metadata file is created, assume that this is a one-video job:
-      if (((Vector<File>) parameters.get("metaDataFiles")).size() == 1)
-        parameters.put("metadata", new Metadata(((Vector<File>) parameters.get("metaDataFiles")).get(0)));
+      if (((Vector<File>) parameters.get("metaDataFiles")).size() == 1) {
+        Metadata metadata = new Metadata(((Vector<File>) parameters.get("metaDataFiles")).get(0));
+        parameters.put("metadata", metadata);
+
+        // Don't need ot persist again, as the Metadata was already persisted in the previous for loop.
+        // DerbyDB.persist(metadata);
+      }
       updateProgress(100);
     } catch (IOException e) {
       e.printStackTrace();
