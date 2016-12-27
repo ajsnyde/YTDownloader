@@ -183,8 +183,11 @@ public class GUI {
       public boolean dispatchKeyEvent(KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_RELEASED && (e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
           try {
+
             String[] urls = ((String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor)).split("\n");
+
             addTaskGUI(urls);
+
           } catch (Exception e1) {
             e1.printStackTrace();
           }

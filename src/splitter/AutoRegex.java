@@ -43,8 +43,6 @@ import youtubeObjects.Song;
 
 public class AutoRegex {
 
-  Album album = new Album();
-
   public int numPasses = 4;
 
   public Album getAlbum(String description, int length) {
@@ -52,23 +50,20 @@ public class AutoRegex {
     description = preprocess(description);
 
     FileLogger.logger().log(Level.FINEST, description);
-
+    Album album;
     if (isDoubleTimestamped(description))
-      DoubleTimestampMethod(description);
+      album = DoubleTimestampMethod(description);
     else if (isSingleTimestamped(description))
-      SingleTimestampMethod(description, length);
+      album = SingleTimestampMethod(description, length);
     else
       return new Album();
     album.length = length;
-
-    // Required for database to have relationships correctly recorded
-    for (Song song : album.songs)
-      song.album = album;
-
     return album;
   }
 
-  private void SingleTimestampMethod(String description, int length) {
+  private Album SingleTimestampMethod(String description, int length) {
+    Album album = new Album();
+
     int lineNum = 0;
     Song lastSong = new Song();
     for (String line : description.split("\n")) {
@@ -80,16 +75,16 @@ public class AutoRegex {
 
       // set start and end times to song
       m.find();
-      song.startTime = RegexHelper.parseSeconds(m.group(1));
+      song.start = parseSeconds(m.group(1));
       song.number = lineNum;
 
       if (lineNum > 1) {
-        lastSong.endTime = RegexHelper.parseSeconds(m.group(1));
+        lastSong.end = parseSeconds(m.group(1));
         album.songs.add(lastSong);
       }
       lastSong = song;
     }
-    lastSong.endTime = length;
+    lastSong.end = length;
     album.songs.add(lastSong);
 
     // description2 will be description stripped of timestamps
@@ -107,9 +102,11 @@ public class AutoRegex {
     for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
       album.songs.get(i).title = lines[i];
     }
+    return album;
   }
 
-  private void DoubleTimestampMethod(String description) {
+  private Album DoubleTimestampMethod(String description) {
+    Album album = new Album();
 
     int lineNum = 0;
     String description2 = "";
@@ -122,9 +119,9 @@ public class AutoRegex {
 
         // set start and end times to song
         m.find();
-        song.startTime = RegexHelper.parseSeconds(m.group(1));
+        song.start = parseSeconds(m.group(1));
         m.find();
-        song.endTime = RegexHelper.parseSeconds(m.group(1));
+        song.end = parseSeconds(m.group(1));
 
         line = removeTimestamps(line);
         // System.out.println(line);
@@ -143,6 +140,8 @@ public class AutoRegex {
     for (int i = 0; i < album.songs.size() && i < lines.length; ++i) {
       album.songs.get(i).title = lines[i];
     }
+
+    return album;
   }
 
   // Finds and deletes timestamps, returning the resulting left or right side, whichever is larger
@@ -293,4 +292,32 @@ public class AutoRegex {
     }
     return numTimestamps;
   }
+
+  // parses hh:mm:ss and mm:ss formats to int of seconds
+  public static int parseSeconds(String input) {
+    String[] tokens = input.split(":");
+    if (tokens.length == 3) {
+      int hours = Integer.parseInt(tokens[0]);
+      int minutes = Integer.parseInt(tokens[1]);
+      int seconds = Integer.parseInt(tokens[2]);
+      return (3600 * hours + 60 * minutes + seconds);
+    } else if (tokens.length == 2) {
+      int minutes = Integer.parseInt(tokens[0]);
+      int seconds = Integer.parseInt(tokens[1]);
+      return (60 * minutes + seconds);
+    } else
+      return 0;
+  }
+
+  static String regexProcess(String pre) {
+    FileLogger.logger().log(Level.FINEST, "Converting " + pre);
+
+    pre = pre.replace("num", "(?:[\\d]+)");
+    pre = pre.replace(" ", "\\s+");
+    pre = pre.replace("title", "(.+)");
+    pre = pre.replace("timestamp", "([\\d]{0,2}:?[\\d]{1,3}:\\d\\d)");
+    System.out.println("End: " + pre);
+    return pre;
+  }
+
 }

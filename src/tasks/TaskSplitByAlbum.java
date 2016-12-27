@@ -46,10 +46,10 @@ public class TaskSplitByAlbum extends Task {
 
       for (Song song : album.songs) {
         FileLogger.logger().log(Level.FINEST, "Song being processed");
-        FileLogger.logger().log(Level.FINEST, song.title + " " + song.startTime + " " + song.endTime);
+        FileLogger.logger().log(Level.FINEST, song.title + " " + song.start + " " + song.end);
 
         Process process = new ProcessBuilder("resources/sox-14-4-2/sox.exe", "Downloads/" + meta.uploader + "/" + meta.uploader + " - " + meta.title + ".mp3",
-            "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3", "trim", song.startTime + "", (song.endTime - song.startTime) + "").start();
+            "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3", "trim", song.start + "", (song.end - song.start) + "").start();
         process.waitFor();
 
         process = new ProcessBuilder("resources/id3tool.exe", "-c", i + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
