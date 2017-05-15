@@ -43,6 +43,7 @@ public class AddTask extends JFrame {
   private MetaTableModel model;
   private Task metadataTask;
   private JButton btnAdd;
+  private JComboBox comboBox;
 
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
@@ -93,13 +94,23 @@ public class AddTask extends JFrame {
     panel.add(panel_1, gbc_panel_1);
     panel_1.setLayout(new BorderLayout(0, 0));
 
-    JComboBox comboBox = new JComboBox(pastFiles.toArray());
+    comboBox = new JComboBox(pastFiles.toArray());
+    comboBox.setEditable(true);
+    comboBox.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        comboBox.removeActionListener(this);
+        System.out.println("TRIGGERED");
+        comboBox.insertItemAt(comboBox.getSelectedItem(), 0);
+        comboBox.addActionListener(this);
+      }
+    });
     panel_1.add(comboBox);
 
     JButton btnBrowse = new JButton("Browse...");
     btnBrowse.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = fc.showOpenDialog(fc);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -203,7 +214,8 @@ public class AddTask extends JFrame {
         for (Metadata meta : model.metas) {
           TaskBuilder builder = new TaskBuilder().createSequentialTask().put("metadata", meta);
           if (chckbxDownloadVideo.isSelected())
-            builder.addTask(TASK.TASKDOWNLOADVIDEO, true).put("metadata", meta).put("url", meta.url).put("parent", builder.build());
+            builder.addTask(TASK.TASKDOWNLOADVIDEO, true).put("metadata", meta).put("url", meta.url).put("parent", builder.build()).put("downloadLocation",
+                comboBox.getSelectedItem().toString() + "\\");
           builder.put("extractAudio", chckbxDownloadVideo.isSelected() ? "true" : "false");
           builder.put("audioFormat", comboBox_1.getSelectedItem().toString().toLowerCase());
           if (chckbxSplitAudioBy.isSelected())

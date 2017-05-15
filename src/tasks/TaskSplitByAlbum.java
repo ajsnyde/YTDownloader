@@ -27,6 +27,8 @@ public class TaskSplitByAlbum extends Task {
       status = "Splitting by Album";
       updateProgress(0);
 
+      if (parameters.get("downloadLocation") == null)
+        parameters.put("downloadLocation", "Downloads\\");
       Album album = (Album) parameters.get("album");
       // FileLogger.logger().log(Level.FINEST, ((File) parameters.get("audioLocation")).getAbsolutePath());
       // TODO: updateProgress
@@ -40,7 +42,7 @@ public class TaskSplitByAlbum extends Task {
       // NOTE: IT SEEMS THAT SOX CANNOT CREATE DIRECTORIES. ADDING meta.title BETWEEN meta.uploader AND song.title RESULTS IN FAIL!
 
       // This should alleviate that issue assuming proper permissions. Note that I moved it outside of the loop. Perhaps this will fix the !1st song being written outside of the dir.
-      File dir = new File("Downloads/" + meta.uploader + "/" + meta.title);
+      File dir = new File(parameters.get("downloadLocation") + meta.uploader + "/" + meta.title);
       boolean success = dir.mkdir();
       status = "Splitting Audio by Song";
 
@@ -48,15 +50,18 @@ public class TaskSplitByAlbum extends Task {
         FileLogger.logger().log(Level.FINEST, "Song being processed");
         FileLogger.logger().log(Level.FINEST, song.title + " " + song.start + " " + song.end);
 
-        Process process = new ProcessBuilder("resources/sox-14-4-2/sox.exe", "Downloads/" + meta.uploader + "/" + meta.uploader + " - " + meta.title + ".mp3",
+        Process process = new ProcessBuilder("resources/sox-14-4-2/sox.exe", parameters.get("downloadLocation") + meta.uploader + "/" + meta.uploader + " - " + meta.title + ".mp3",
             "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3", "trim", song.start + "", (song.end - song.start) + "").start();
         process.waitFor();
 
-        process = new ProcessBuilder("resources/id3tool.exe", "-c", i + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
+        process = new ProcessBuilder("resources/id3tool.exe", "-c", i + "", parameters.get("downloadLocation") + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3")
+            .start();
         process.waitFor();
-        process = new ProcessBuilder("resources/id3tool.exe", "-a", meta.title, "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
+        process = new ProcessBuilder("resources/id3tool.exe", "-a", meta.title, parameters.get("downloadLocation") + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3")
+            .start();
         process.waitFor();
-        process = new ProcessBuilder("resources/id3tool.exe", "-t", song.title + "", "Downloads/" + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
+        process = new ProcessBuilder("resources/id3tool.exe", "-t", song.title + "",
+            parameters.get("downloadLocation") + meta.uploader + (success ? ("/" + meta.title) : "") + "/" + song.title + ".mp3").start();
         process.waitFor();
         updateProgress(((double) i / album.songs.size()) * 100.0);
         i++;

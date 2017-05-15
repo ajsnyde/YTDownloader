@@ -29,6 +29,8 @@ public class TaskDownloadMeta extends Task {
     increaseParent();
     try {
       status = "Grabbing Metadata";
+      if (parameters.get("downloadLocation") == null)
+        parameters.put("downloadLocation", "Downloads\\");
       if (parameters.get("metaDataFiles") == null)
         parameters.put("metaDataFiles", new Vector<File>());
       if (parameters.get("metaDatas") == null)
@@ -36,7 +38,8 @@ public class TaskDownloadMeta extends Task {
 
       HashMap<String, Object> metaParameters = new HashMap<String, Object>();
       metaParameters.put("ExeLocation", "resources/youtube-dl.exe");
-      metaParameters.put("ExeArguments", "--write-info-json --skip-download -i -o \"Downloads/%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
+      metaParameters.put("ExeArguments",
+          "--write-info-json --skip-download -i -o \"" + parameters.get("downloadLocation") + "%(uploader)s/%(uploader)s - %(title)s.%(ext)s\" " + parameters.get("url"));
 
       execute = new Execute(metaParameters);
       thread = new Thread(execute, "test");
