@@ -26,9 +26,9 @@ import javax.swing.JButton;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -68,12 +68,14 @@ public class AddTask extends JFrame {
     }
     setTitle(urls[0]);
 
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setBounds(100, 100, 781, 483);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
     setContentPane(contentPane);
+    if (pastFiles.size() == 0)
+      pastFiles.add(Paths.get("").toAbsolutePath().toString() + "\\Downloads");
 
     JPanel panel = new JPanel();
     contentPane.add(panel, BorderLayout.CENTER);
